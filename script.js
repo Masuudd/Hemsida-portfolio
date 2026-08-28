@@ -15,22 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const loadingBarFill = document.getElementById("loadingBarFill");
   const loadingStatus = document.getElementById("loadingStatus");
 
-  let progress = 0;
-  const loadingInterval = setInterval(() => {
-    // Öka takten ojämnt så det känns naturligt, inte robotlikt
-    progress += Math.random() * 18 + 6;
-    if (progress >= 100) {
-      progress = 100;
-      clearInterval(loadingInterval);
-      loadingStatus.textContent = "Klar!";
-      setTimeout(() => {
-        loadingScreen.classList.add("is-hidden");
-        document.body.style.overflow = ""; // släpp låsningen av scroll
-      }, 350);
-    }
-    loadingBarFill.style.width = progress + "%";
-  }, 220);
-
   // Lås scroll medan laddningsskärmen visas
   document.body.style.overflow = "hidden";
 
@@ -44,6 +28,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const MUSIC_DURATION_MS = 10000;
   let musicTimer = null;
+
+  const loadingStartedAt = performance.now();
+  const loadingInterval = setInterval(() => {
+    const elapsed = performance.now() - loadingStartedAt;
+    const progress = Math.min((elapsed / MUSIC_DURATION_MS) * 100, 100);
+    loadingBarFill.style.width = progress + "%";
+
+    if (progress >= 100) {
+      clearInterval(loadingInterval);
+      loadingStatus.textContent = "Klar!";
+      loadingScreen.classList.add("is-hidden");
+      document.body.style.overflow = "";
+    }
+  }, 100);
 
   function stopIntroMusic() {
     introAudio.pause();
@@ -82,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Ett klick på laddningsskärmen räknas som användarinteraktion och kan låsa upp ljudet.
-  loadingScreen.addEventListener("click", playIntroMusic, { once: true });
+  loadingScreen.addEventListener("click", playIntroMusic);
 
   // Permanent ljudkontroll: klick startar/stoppar musiken manuellt
   soundToggleBtn.addEventListener("click", () => {

@@ -135,7 +135,7 @@ ul, ol { list-style: none; }
 /* Ljudkontroller */
 .sound-fallback-btn, .sound-toggle-btn {
   position: fixed;
-  z-index: 60;
+  z-index: 1000;
   font-family: var(--font-mono);
   font-size: 0.78rem;
   border: 1px solid var(--border);
