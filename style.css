@@ -1,4 +1,24 @@
 /* =========================================================
+   INNEHÅLLSFÖRTECKNING — sök (Ctrl+F) på rubriken i VS Code
+   för att hoppa direkt dit:
+
+   "DESIGNSYSTEM"     → färger, typsnitt (ändra här för att byta hela paletten)
+   "LADDNINGSSKÄRM"   → skärmen som visas när sidan öppnas
+   "HEADER / NAV"     → menyn högst upp
+   "BUTTONS"          → alla knappars utseende
+   "HERO"             → första sektionen med namn + profilbild
+   "SECTIONS"         → generella regler alla sektioner delar
+   "OM MIG"           → "Om mig"-sektionen
+   "KOMPETENSER"      → kunskaps-taggarna
+   "PROJEKT"          → projektkorten
+   "TIDSLINJE"        → Utbildning & Erfarenhet
+   "KONTAKT"          → kontaktformuläret
+   "FOOTER"           → sidfoten
+   "SCROLL-REVEAL"    → animationerna som spelas upp vid scroll
+   "RESPONSIVITET"    → allt som ändras på mindre skärmar (mobil)
+   ========================================================= */
+
+/* =========================================================
    DESIGNSYSTEM
    Ändra en variabel här, och hela sidan uppdateras.
    ========================================================= */
@@ -294,12 +314,20 @@ ul, ol { list-style: none; }
 
 .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
 
-.hero-media { display: flex; justify-content: center; }
+/* align-items: center gör att profile-frame aldrig sträcks/klyschas
+   av flexboxens standardbeteende (som annars är "stretch") */
+.hero-media { display: flex; justify-content: center; align-items: center; }
 
+/* Profilbildens runda "ram". VIKTIGT: vi sätter samma värde på både
+   width OCH height (istället för att bara lita på aspect-ratio) —
+   vissa inbyggda webbläsare (t.ex. Gmails egen webbvisare) hanterar
+   aspect-ratio dåligt, vilket gjorde att bilden blev äggformad istället
+   för rund. Med width+height explicit kan det aldrig bli fel. */
 .profile-frame {
   position: relative;
   width: min(320px, 70vw);
-  aspect-ratio: 1;
+  height: min(320px, 70vw);
+  flex-shrink: 0; /* hindrar flex-boxen från att klämma/sträcka ihop den */
   border-radius: 50%;
   padding: 4px;
   background: var(--gradient);
@@ -589,7 +617,7 @@ ul, ol { list-style: none; }
   .hero-role { font-size: 0.85rem; }
   .hero-desc { font-size: 0.95rem; }
   .hero-actions .btn { width: 100%; justify-content: center; }
-  .profile-frame { width: min(260px, 72vw); }
+  .profile-frame { width: min(260px, 72vw); height: min(260px, 72vw); }
   .section { padding: 72px 0; }
   .section-title { font-size: clamp(2rem, 10vw, 3rem); }
   .contact-form { padding: 20px; }
