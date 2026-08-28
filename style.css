@@ -3,6 +3,9 @@
    för att hoppa direkt dit:
 
    "DESIGNSYSTEM"     → färger, typsnitt (ändra här för att byta hela paletten)
+   "CURSOR-GLOW"      → ljuset som följer musen
+   "GRAIN-OVERLAY"    → det subtila "filmkorn"-lagret över hela sidan
+   "KINETISK TYPOGRAFI" → bokstav-för-bokstav-animationen på hero-titeln
    "LADDNINGSSKÄRM"   → skärmen som visas när sidan öppnas
    "HEADER / NAV"     → menyn högst upp
    "BUTTONS"          → alla knappars utseende
@@ -44,6 +47,63 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+
+/* =========================================================
+   CURSOR-GLOW
+   Ett mjukt, runt ljussken som följer musen. Styrs av script.js
+   (avsnitt "CURSOR-GLOW"), som uppdaterar left/top vid mousemove.
+   Rör absolut ingenting i sig själv — bara en positionerad cirkel.
+   ========================================================= */
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  pointer-events: none; /* så att den aldrig blockerar klick */
+  z-index: 5;
+  background: radial-gradient(circle, rgba(58, 160, 255, 0.16), transparent 70%);
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen; /* gör att glowen "lägger sig ovanpå" mörk bakgrund som ljus, inte som en grå fläck */
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  will-change: transform;
+}
+.cursor-glow.is-active { opacity: 1; }
+
+/* =========================================================
+   GRAIN-OVERLAY
+   Ett extremt subtilt brus-lager (som filmkorn) ovanpå hela sidan.
+   Det här är detaljen som får en platt design att kännas dyr och
+   analog istället för digital och steril. Byggd med en liten
+   inbäddad SVG (feTurbulence) — ingen bildfil behövs.
+   ========================================================= */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   KINETISK TYPOGRAFI
+   script.js delar upp hero-titelns text i en <span> per bokstav
+   (klass .kinetic-letter) och låter varje bokstav animeras in
+   var för sig, med en liten fördröjning mellan varje — det ger
+   en mycket mer "levande" känsla än att hela raden bara dyker upp.
+   ========================================================= */
+.kinetic-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(30px) rotate(6deg);
+  animation: letterIn 0.7s var(--ease) forwards;
+}
+@keyframes letterIn {
+  to { opacity: 1; transform: translateY(0) rotate(0deg); }
+}
 
 button {
   font: inherit;
@@ -314,9 +374,10 @@ ul, ol { list-style: none; }
 
 .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
 
-/* align-items: center gör att profile-frame aldrig sträcks/klyschas
-   av flexboxens standardbeteende (som annars är "stretch") */
-.hero-media { display: flex; justify-content: center; align-items: center; }
+/* perspective: gör att rotateX/rotateY (som script.js sätter vid
+   musrörelse) ser ut som en verklig 3D-lutning istället för att
+   bara klämma ihop bilden platt */
+.hero-media { display: flex; justify-content: center; align-items: center; perspective: 900px; }
 
 /* Profilbildens runda "ram". VIKTIGT: vi sätter samma värde på både
    width OCH height (istället för att bara lita på aspect-ratio) —
@@ -334,16 +395,29 @@ ul, ol { list-style: none; }
   background-size: 200% 200%;
   animation: borderShift 6s ease infinite;
   box-shadow: 0 0 60px rgba(58, 160, 255, 0.25);
+  transform-style: preserve-3d; /* låter ::after-ringen rotera i samma 3D-rum */
+  transition: transform 0.15s ease-out, opacity 0.2s ease; /* mjukar ut varje uppdatering från script.js */
+  will-change: transform;
 }
 @keyframes borderShift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
-.profile-frame img {
+.profile-frame img,
+.profile-fallback {
   width: 100%; height: 100%;
   border-radius: 50%;
   object-fit: cover;
   background: var(--bg-secondary);
+}
+.profile-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 .profile-frame::after {
   content: "";
@@ -592,7 +666,7 @@ ul, ol { list-style: none; }
   .nav-toggle { display: flex; }
   .main-nav {
     position: fixed;
-    top: 64px; left: 0; right: 0;
+    top: 72px; left: 0; right: 0;
     background: rgba(5, 7, 13, 0.97);
     backdrop-filter: blur(10px);
     flex-direction: column;
@@ -623,5 +697,7 @@ ul, ol { list-style: none; }
   html { scroll-behavior: auto; }
   .reveal { transition: opacity 0.4s ease; transform: none !important; }
   .hero-glow, .loading-bg, .profile-frame, .scroll-cue span { animation: none !important; }
+  .cursor-glow { display: none; } /* script.js aktiverar den ändå aldrig i detta läge, men extra skydd */
+  .kinetic-letter { opacity: 1; transform: none; animation: none; } /* visa texten direkt, ingen stagger */
   * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
 }

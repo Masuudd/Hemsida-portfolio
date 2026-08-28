@@ -20,6 +20,12 @@
 </head>
 <body>
 
+<!-- Ett mjukt ljussken som följer musen över hela sidan (se script.js, avsnitt "CURSOR-GLOW") -->
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<!-- Ett mycket subtilt "filmkorn"-lager ovanpå hela sidan — ger djup istället för platt design -->
+<div class="grain-overlay" aria-hidden="true"></div>
+
 <!-- =========================================================
      LADDNINGSSKÄRM
      Visas först, döljs av script.js när sidan är redo.
@@ -77,10 +83,12 @@
       <div class="hero-text">
         <p class="eyebrow reveal" data-reveal="fade">HEJ, JAG ÄR</p>
         <h1 class="hero-title reveal" data-reveal="slide-up" data-delay="80">MASUUD ALI</h1>
-        <p class="hero-role reveal" data-reveal="slide-up" data-delay="160">[DIN TITEL] — t.ex. "Student &amp; blivande utvecklare"</p>
+        <p class="hero-role reveal" data-reveal="slide-up" data-delay="160">Systemutvecklarstudent &amp; digital skapare</p>
         <p class="hero-desc reveal" data-reveal="slide-up" data-delay="240">
-          Jag tycker om att skapa moderna digitala lösningar och utvecklas
-          inom programmering, webbutveckling och teknik.
+          Jag brinner för att skapa — hemsidor, spel, musik, system, allt som
+          går att bygga med kod. Just nu fördjupar jag den nyfikenheten på
+          NBI/Handelsakademin, där jag lär mig bygga robusta, verkliga
+          system från grunden.
         </p>
         <div class="hero-actions reveal" data-reveal="slide-up" data-delay="320">
           <a href="#projects" class="btn btn-primary">Se mina projekt</a>
@@ -89,11 +97,14 @@
       </div>
 
       <div class="hero-media reveal" data-reveal="scale" data-delay="200">
-        <div class="profile-frame">
+        <!-- id="profileFrame": script.js hämtar denna för tilt- och scroll-animationen -->
+        <div class="profile-frame" id="profileFrame">
           <img
             src="profile.jpg"
             alt="Porträtt av Masuud Ali"
-            id="profileImg">
+            id="profileImg"
+            onerror="this.style.display='none'; document.getElementById('profileFallback').hidden=false;">
+          <div class="profile-fallback" id="profileFallback" hidden>MA</div>
         </div>
       </div>
     </div>
@@ -114,15 +125,20 @@
       <div class="about-grid">
         <div class="about-text reveal" data-reveal="slide-up" data-delay="80">
           <p>
-            [DIN BESKRIVNING] — Skriv här vem du är, vad du studerar, vilka
-            intressen du har, vad du håller på att lära dig just nu och vad
-            dina mål och framtidsplaner är. Två till fyra meningar räcker för
-            att ge en tydlig bild av dig.
+            Jag är en skapare i grunden — någon som inte nöjer mig med att
+            bara <em>använda</em> teknik, utan vill förstå den tillräckligt
+            djupt för att bygga med den. Hemsidor, spel, musikproduktion,
+            automatisering — om det går att skapa med en dator har jag
+            antagligen redan testat det.
           </p>
           <p>
-            Jag gillar att lära mig genom att bygga saker på riktigt — testa,
-            bryta sönder och sätta ihop igen. Den här sidan är själv ett
-            exempel på det.
+            Just nu fördjupar jag mig i systemutveckling på
+            NBI/Handelsakademin, där jag lär mig bygga robusta, verkliga
+            system från grunden — från databas till gränssnitt. Det jag tar
+            med mig in i varje projekt är nyfikenheten hos en självlärd
+            skapare kombinerat med strukturen från en formell utbildning:
+            jag löser problem praktiskt, lär mig snabbt, och stannar inte
+            förrän lösningen faktiskt fungerar.
           </p>
         </div>
 
@@ -130,9 +146,9 @@
           <h3 class="quick-facts-title">Snabbfakta</h3>
           <ul class="fact-list">
             <li><span>Plats</span><strong>Göteborg, Sverige</strong></li>
-            <li><span>Utbildning</span><strong>[DIN UTBILDNING]</strong></li>
-            <li><span>Skola</span><strong>[DIN SKOLA]</strong></li>
-            <li><span>Fokus</span><strong>[DITT FOKUS]</strong></li>
+            <li><span>Utbildning</span><strong>Systemutvecklare (.NET-inriktning)</strong></li>
+            <li><span>Skola</span><strong>NBI/Handelsakademin</strong></li>
+            <li><span>Fokus</span><strong>Fullstack-utveckling &amp; kreativ teknik</strong></li>
             <li><span>Språk</span><strong>Svenska / Engelska</strong></li>
           </ul>
         </div>
@@ -148,34 +164,51 @@
       <p class="section-eyebrow reveal" data-reveal="fade">P — 02</p>
       <h2 class="section-title reveal" data-reveal="slide-up">Kompetenser</h2>
       <p class="section-hint reveal" data-reveal="fade" data-delay="80">
-        Detta är exempel — lägg enkelt till eller ta bort kort i index.html.
+        Baserat på min utbildning till Systemutvecklare (.NET-inriktning) på
+        NBI/Handelsakademin, samt kompetenser jag tagit med mig själv.
       </p>
 
       <div class="skills-columns">
         <div class="skills-category reveal" data-reveal="slide-up" data-delay="0">
-          <h3 class="skills-category-title">Frontend</h3>
+          <h3 class="skills-category-title">Programmering &amp; utveckling</h3>
           <div class="skill-tags">
+            <span class="skill-tag">C#</span>
+            <span class="skill-tag">.NET</span>
+            <span class="skill-tag">Objektorienterad programmering</span>
+            <span class="skill-tag">SQL &amp; databaser</span>
             <span class="skill-tag">HTML</span>
             <span class="skill-tag">CSS</span>
             <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">Lua Scripting</span>
           </div>
         </div>
 
-        <div class="skills-category reveal" data-reveal="slide-up" data-delay="120">
-          <h3 class="skills-category-title">Verktyg</h3>
+        <div class="skills-category reveal" data-reveal="slide-up" data-delay="90">
+          <h3 class="skills-category-title">Metodik &amp; processer</h3>
           <div class="skill-tags">
-            <span class="skill-tag">Git</span>
-            <span class="skill-tag">GitHub</span>
-            <span class="skill-tag">VS Code</span>
+            <span class="skill-tag">Agila metoder (Scrum/Kanban)</span>
+            <span class="skill-tag">Versionshantering (Git)</span>
+            <span class="skill-tag">Kravhantering &amp; UML</span>
+            <span class="skill-tag">Testdriven utveckling</span>
           </div>
         </div>
 
-        <div class="skills-category reveal" data-reveal="slide-up" data-delay="240">
-          <h3 class="skills-category-title">Övrigt</h3>
+        <div class="skills-category reveal" data-reveal="slide-up" data-delay="180">
+          <h3 class="skills-category-title">Ledarskap &amp; samarbete</h3>
           <div class="skill-tags">
-            <span class="skill-tag">Python</span>
-            <span class="skill-tag">Java</span>
-            <span class="skill-tag">SQL</span>
+            <span class="skill-tag">Ledarskapsutbildning</span>
+            <span class="skill-tag">Affärsmannaskap</span>
+            <span class="skill-tag">Projektledning</span>
+            <span class="skill-tag">Teamarbete</span>
+          </div>
+        </div>
+
+        <div class="skills-category reveal" data-reveal="slide-up" data-delay="270">
+          <h3 class="skills-category-title">Kreativt skapande</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Spelutveckling</span>
+            <span class="skill-tag">Musikproduktion</span>
+            <span class="skill-tag">Webbdesign</span>
           </div>
         </div>
       </div>
@@ -276,10 +309,15 @@
         <li class="timeline-item reveal" data-reveal="slide-right" data-delay="0">
           <span class="timeline-dot"></span>
           <div class="timeline-content">
-            <span class="timeline-period">2026 — Pågående</span>
-            <h3>[SKOLANS NAMN]</h3>
-            <p class="timeline-role">[DIN UTBILDNING]</p>
-            <p>[Kort beskrivning av vad utbildningen innehåller och vad du lär dig.]</p>
+            <span class="timeline-period">2026 — 2028, Pågående</span>
+            <h3>NBI/Handelsakademin</h3>
+            <p class="timeline-role">Systemutvecklare (.NET-inriktning)</p>
+            <p>
+              Tvåårig YH-utbildning i Göteborg med fokus på objektorienterad
+              programmering i C#, databaser, agil systemutveckling och
+              webbapplikationer — kombinerat med 24 veckors praktik (LIA)
+              ute på företag.
+            </p>
           </div>
         </li>
         <li class="timeline-item reveal" data-reveal="slide-right" data-delay="140">

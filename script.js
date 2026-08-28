@@ -34,6 +34,29 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 100);
 
   // =========================================================
+  // 1b. KINETISK TYPOGRAFI
+  // Delar upp hero-titelns text ("MASUUD ALI") i en <span> per
+  // bokstav, så CSS (.kinetic-letter i style.css) kan animera in
+  // varje bokstav för sig med en liten fördröjning mellan dem.
+  // =========================================================
+  const heroTitle = document.querySelector(".hero-title");
+  if (heroTitle && !prefersReducedMotion) {
+    const originalText = heroTitle.textContent;
+    heroTitle.textContent = ""; // töm elementet, vi bygger upp det igen med spans
+
+    originalText.split("").forEach((char, index) => {
+      const letterSpan = document.createElement("span");
+      letterSpan.className = "kinetic-letter";
+      // Mellanslag måste vara ett "non-breaking space", annars
+      // kollapsar webbläsaren bort det osynliga mellanslaget
+      letterSpan.textContent = char === " " ? "\u00A0" : char;
+      // Ju längre fram bokstaven är i ordet, desto senare startar den
+      letterSpan.style.animationDelay = `${300 + index * 35}ms`;
+      heroTitle.appendChild(letterSpan);
+    });
+  }
+
+  // =========================================================
   // 2. HEADER: byt stil vid scroll
   // =========================================================
   const siteHeader = document.getElementById("siteHeader");
@@ -194,5 +217,117 @@ document.addEventListener("DOMContentLoaded", () => {
   // 9. ÅRTAL I FOOTERN
   // =========================================================
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  // Effekterna nedan (cursor-glow, magnetiska knappar, 3D-tilt) är
+  // rena "extra touch"-detaljer. De körs bara på datorer med mus
+  // (inte mobiler/pekskärmar) och bara om användaren inte bett om
+  // minskad rörelse — annars är de bara avstängda, resten av sidan
+  // fungerar exakt som vanligt.
+  const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
+
+  // =========================================================
+  // 10. CURSOR-GLOW
+  // Ett runt ljussken (.cursor-glow i style.css) som följer musen.
+  // Vi flyttar bara elementets position — CSS sköter själva utseendet.
+  // =========================================================
+  if (hasFinePointer && !prefersReducedMotion) {
+    const cursorGlow = document.getElementById("cursorGlow");
+
+    window.addEventListener("mousemove", (event) => {
+      cursorGlow.style.transform = `translate(${event.clientX}px, ${event.clientY}px) translate(-50%, -50%)`;
+      cursorGlow.classList.add("is-active");
+    });
+
+    // Dölj glowen när musen lämnar webbläsarfönstret helt
+    document.addEventListener("mouseleave", () => {
+      cursorGlow.classList.remove("is-active");
+    });
+  }
+
+  // =========================================================
+  // 11. MAGNETISKA KNAPPAR
+  // Knapparna "dras" lätt mot muspekaren när den är nära — som om
+  // knappen har en svag magnet i sig. Vi räknar ut hur långt musen
+  // är från knappens mitt och flyttar knappen en bråkdel av det.
+  // =========================================================
+  if (hasFinePointer && !prefersReducedMotion) {
+    document.querySelectorAll(".btn").forEach((button) => {
+      button.addEventListener("mousemove", (event) => {
+        const rect = button.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left - rect.width / 2;
+        const offsetY = event.clientY - rect.top - rect.height / 2;
+        // 0.25 = styrkan på magneten. Högre värde = knappen rör sig mer.
+        button.style.transform = `translate(${offsetX * 0.25}px, ${offsetY * 0.25}px)`;
+      });
+
+      button.addEventListener("mouseleave", () => {
+        button.style.transform = ""; // hoppa tillbaka till ursprungsläget
+      });
+    });
+  }
+
+  // =========================================================
+  // 12. PROFILBILDENS TILT + SCROLL-ANIMATION
+  // Två separata rörelser kombineras till EN transform-sträng:
+  //   a) TILT — bilden lutar sig lätt i 3D mot muspekaren (bara i hero)
+  //   b) SCROLL — bilden glider uppåt, krymper och tonas bort när
+  //      man scrollar förbi hero-sektionen (som att den "sjunker in
+  //      i bakgrunden")
+  // Vi sparar värdena i variabler och räknar om HELA transformen
+  // varje gång något av dem ändras, annars skulle den ena rörelsen
+  // skriva över den andra.
+  // =========================================================
+  const profileFrame = document.getElementById("profileFrame");
+  const heroSection = document.getElementById("hero");
+
+  if (profileFrame && heroSection && !prefersReducedMotion) {
+    let tiltX = 0;      // rotation kring Y-axeln (styrs av musens X-position)
+    let tiltY = 0;      // rotation kring X-axeln (styrs av musens Y-position)
+    let scrollOffsetY = 0;
+    let scrollScale = 1;
+    let scrollOpacity = 1;
+
+    function applyProfileTransform() {
+      profileFrame.style.transform =
+        `translateY(${scrollOffsetY}px) scale(${scrollScale}) rotateX(${tiltY}deg) rotateY(${tiltX}deg)`;
+      profileFrame.style.opacity = scrollOpacity;
+    }
+
+    // --- a) TILT vid musrörelse (bara på skärmar med riktig mus) ---
+    if (hasFinePointer) {
+      heroSection.addEventListener("mousemove", (event) => {
+        const rect = heroSection.getBoundingClientRect();
+        // relX/relY går från -0.5 (vänster/topp) till 0.5 (höger/botten)
+        const relX = (event.clientX - rect.left) / rect.width - 0.5;
+        const relY = (event.clientY - rect.top) / rect.height - 0.5;
+        const MAX_TILT_DEGREES = 16;
+        tiltX = relX * MAX_TILT_DEGREES;
+        tiltY = -relY * MAX_TILT_DEGREES;
+        applyProfileTransform();
+      });
+
+      heroSection.addEventListener("mouseleave", () => {
+        tiltX = 0;
+        tiltY = 0;
+        applyProfileTransform();
+      });
+    }
+
+    // --- b) PARALLAX + KRYMP vid scroll ---
+    function updateProfileScrollEffect() {
+      const heroHeight = heroSection.offsetHeight;
+      // progress går från 0 (högst upp i hero) till 1 (helt scrollad förbi hero)
+      const progress = Math.min(Math.max(window.scrollY / heroHeight, 0), 1);
+
+      scrollOffsetY = progress * 60;       // glider 60px uppåt
+      scrollScale = 1 - progress * 0.2;    // krymper till 80% av storleken
+      scrollOpacity = 1 - progress * 0.8;  // tonas nästan bort
+
+      applyProfileTransform();
+    }
+
+    window.addEventListener("scroll", updateProfileScrollEffect, { passive: true });
+    updateProfileScrollEffect(); // kör en gång direkt, ifall sidan laddas mitt i scroll-läge
+  }
 
 });
