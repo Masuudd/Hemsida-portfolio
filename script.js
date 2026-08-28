@@ -267,53 +267,63 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================
-  // 12. PROFILBILDENS TILT + SCROLL-ANIMATION
-  // Två separata rörelser kombineras till EN transform-sträng:
-  //   a) TILT — bilden lutar sig lätt i 3D mot muspekaren (bara i hero)
-  //   b) SCROLL — bilden glider uppåt, krymper och tonas bort när
-  //      man scrollar förbi hero-sektionen (som att den "sjunker in
-  //      i bakgrunden")
-  // Vi sparar värdena i variabler och räknar om HELA transformen
-  // varje gång något av dem ändras, annars skulle den ena rörelsen
-  // skriva över den andra.
+  // 12. PROFILBILDENS GUPPNING + TILT + SCROLL-ANIMATION
+  // Tre separata rörelser kombineras till EN transform-sträng:
+  //   a) GUPPNING — en mjuk, kontinuerlig upp/ner-rörelse (som att
+  //      flyta i vatten). Går hela tiden, via requestAnimationFrame.
+  //   b) TILT — bilden lutar sig lätt i 3D mot muspekaren (bara i hero)
+  //   c) SCROLL — bilden glider uppåt, krymper och tonas bort när
+  //      man scrollar förbi hero-sektionen
+  // Vi sparar alla värden i variabler och räknar om HELA transformen
+  // varje gång något av dem ändras — annars skulle t.ex. scrollning
+  // skriva över guppningen istället för att kombineras med den.
   // =========================================================
   const profileFrame = document.getElementById("profileFrame");
   const heroSection = document.getElementById("hero");
 
   if (profileFrame && heroSection && !prefersReducedMotion) {
-    let tiltX = 0;      // rotation kring Y-axeln (styrs av musens X-position)
-    let tiltY = 0;      // rotation kring X-axeln (styrs av musens Y-position)
+    let bobOffset = 0;   // guppningens nuvarande höjd (sätts varje bildruta)
+    let tiltX = 0;        // rotation kring Y-axeln (styrs av musens X-position)
+    let tiltY = 0;        // rotation kring X-axeln (styrs av musens Y-position)
     let scrollOffsetY = 0;
     let scrollScale = 1;
     let scrollOpacity = 1;
 
     function applyProfileTransform() {
       profileFrame.style.transform =
-        `translateY(${scrollOffsetY}px) scale(${scrollScale}) rotateX(${tiltY}deg) rotateY(${tiltX}deg)`;
+        `translateY(${scrollOffsetY + bobOffset}px) scale(${scrollScale}) rotateX(${tiltY}deg) rotateY(${tiltX}deg)`;
       profileFrame.style.opacity = scrollOpacity;
     }
 
-    // --- a) TILT vid musrörelse (bara på skärmar med riktig mus) ---
+    // --- a) GUPPNING: en oändlig loop som ritar om varje bildruta ---
+    // Math.sin ger ett tal som svänger jämnt mellan -1 och 1 — perfekt
+    // för en mjuk, upprepande vågrörelse utan hackiga hopp.
+    function animateBob(timestampMs) {
+      bobOffset = Math.sin(timestampMs / 900) * 9; // 9px upp, 9px ner
+      applyProfileTransform();
+      requestAnimationFrame(animateBob);
+    }
+    requestAnimationFrame(animateBob);
+
+    // --- b) TILT vid musrörelse (bara på skärmar med riktig mus) ---
     if (hasFinePointer) {
       heroSection.addEventListener("mousemove", (event) => {
         const rect = heroSection.getBoundingClientRect();
         // relX/relY går från -0.5 (vänster/topp) till 0.5 (höger/botten)
         const relX = (event.clientX - rect.left) / rect.width - 0.5;
         const relY = (event.clientY - rect.top) / rect.height - 0.5;
-        const MAX_TILT_DEGREES = 16;
+        const MAX_TILT_DEGREES = 14;
         tiltX = relX * MAX_TILT_DEGREES;
         tiltY = -relY * MAX_TILT_DEGREES;
-        applyProfileTransform();
       });
 
       heroSection.addEventListener("mouseleave", () => {
         tiltX = 0;
         tiltY = 0;
-        applyProfileTransform();
       });
     }
 
-    // --- b) PARALLAX + KRYMP vid scroll ---
+    // --- c) PARALLAX + KRYMP vid scroll ---
     function updateProfileScrollEffect() {
       const heroHeight = heroSection.offsetHeight;
       // progress går från 0 (högst upp i hero) till 1 (helt scrollad förbi hero)
@@ -322,12 +332,61 @@ document.addEventListener("DOMContentLoaded", () => {
       scrollOffsetY = progress * 60;       // glider 60px uppåt
       scrollScale = 1 - progress * 0.2;    // krymper till 80% av storleken
       scrollOpacity = 1 - progress * 0.8;  // tonas nästan bort
-
-      applyProfileTransform();
     }
 
     window.addEventListener("scroll", updateProfileScrollEffect, { passive: true });
     updateProfileScrollEffect(); // kör en gång direkt, ifall sidan laddas mitt i scroll-läge
+  }
+
+  // =========================================================
+  // 13. VATTENBUBBLOR
+  // Fyller #bubbles (i style.css, avsnitt "VATTEN-BAKGRUND") med
+  // ett antal bubblor som får slumpade storlekar, positioner och
+  // hastigheter — så att de känns naturliga och inte identiska.
+  // =========================================================
+  const bubblesContainer = document.getElementById("bubbles");
+  if (bubblesContainer && !prefersReducedMotion) {
+    const BUBBLE_COUNT = 18;
+
+    for (let i = 0; i < BUBBLE_COUNT; i++) {
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+
+      const size = 4 + Math.random() * 14;           // 4–18px i diameter
+      const leftPercent = Math.random() * 100;         // var på bredden den startar
+      const duration = 10 + Math.random() * 14;         // 10–24 sekunder att stiga
+      const delay = Math.random() * 14;                 // olika starttider
+      const drift = (Math.random() - 0.5) * 80;         // sidledsrörelse i pixlar
+
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.left = `${leftPercent}%`;
+      bubble.style.animationDuration = `${duration}s`;
+      bubble.style.animationDelay = `-${delay}s`; // negativ delay = bubblan är redan "på väg upp" när sidan laddas
+      bubble.style.setProperty("--drift", `${drift}px`);
+
+      bubblesContainer.appendChild(bubble);
+    }
+  }
+
+  // =========================================================
+  // 14. RIPPLE-KLICK
+  // Varje klick var som helst på sidan skapar en expanderande ring
+  // vid klickpunkten (.ripple-ring i style.css) — som att röra vid
+  // en vattenyta. Elementet tas bort igen när animationen är klar,
+  // så DOM:en inte fylls på med gamla, osynliga element.
+  // =========================================================
+  if (!prefersReducedMotion) {
+    document.addEventListener("click", (event) => {
+      const ripple = document.createElement("div");
+      ripple.className = "ripple-ring";
+      ripple.style.left = `${event.clientX}px`;
+      ripple.style.top = `${event.clientY}px`;
+      document.body.appendChild(ripple);
+
+      // "animationend" triggas automatiskt när CSS-animationen är klar
+      ripple.addEventListener("animationend", () => ripple.remove());
+    });
   }
 
 });

@@ -20,6 +20,10 @@
 </head>
 <body>
 
+<!-- Fast vatten-bakgrund: långsamt drivande ljus (caustics) + bubblor som script.js fyller på -->
+<div class="caustics" aria-hidden="true"></div>
+<div id="bubbles" aria-hidden="true"></div>
+
 <!-- Ett mjukt ljussken som följer musen över hela sidan (se script.js, avsnitt "CURSOR-GLOW") -->
 <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
@@ -74,7 +78,6 @@
        ========================================================= -->
   <section id="hero" class="hero">
     <div class="hero-bg" aria-hidden="true">
-      <div class="hero-grid"></div>
       <div class="hero-glow hero-glow-1"></div>
       <div class="hero-glow hero-glow-2"></div>
     </div>
@@ -97,14 +100,31 @@
       </div>
 
       <div class="hero-media reveal" data-reveal="scale" data-delay="200">
-        <!-- id="profileFrame": script.js hämtar denna för tilt- och scroll-animationen -->
+        <!-- id="profileFrame": script.js hämtar denna för guppning, tilt och scroll-animationen -->
         <div class="profile-frame" id="profileFrame">
-          <img
-            src="profile.jpg"
-            alt="Porträtt av Masuud Ali"
-            id="profileImg"
-            onerror="this.style.display='none'; document.getElementById('profileFallback').hidden=false;">
-          <div class="profile-fallback" id="profileFallback" hidden>MA</div>
+          <div class="profile-clip">
+            <img
+              src="profile.jpg"
+              alt="Porträtt av Masuud Ali"
+              id="profileImg"
+              onerror="this.style.display='none'; document.getElementById('profileFallback').hidden=false;">
+            <div class="profile-fallback" id="profileFallback" hidden>MA</div>
+
+            <!-- Våglinje ovanpå bildens nederkant, som vattenytan i fotot -->
+            <svg class="frame-wave" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0,25 C 125,55 250,-5 375,25 C 425,35 460,30 500,20 L500,60 L0,60 Z" fill="rgba(63,199,193,0.38)"></path>
+              <path d="M500,25 C 625,55 750,-5 875,25 C 925,35 960,30 1000,20 L1000,60 L500,60 Z" fill="rgba(63,199,193,0.38)"></path>
+            </svg>
+          </div>
+
+          <!-- Droppar som kontinuerligt studsar upp från vattenlinjen (ligger utanför klippytan, se style.css) -->
+          <div class="splash-droplets" aria-hidden="true">
+            <span class="droplet"></span>
+            <span class="droplet"></span>
+            <span class="droplet"></span>
+            <span class="droplet"></span>
+            <span class="droplet"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -113,6 +133,14 @@
       <span></span>
     </a>
   </section>
+
+  <!-- Vågformad övergång, som vattenytan i din bild -->
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 2880 100" preserveAspectRatio="none">
+      <path d="M0,45 C 240,90 480,10 720,45 C 960,80 1200,15 1440,45 L1440,100 L0,100 Z" style="fill: rgba(63,199,193,0.14)"></path>
+      <path d="M1440,45 C 1680,90 1920,10 2160,45 C 2400,80 2640,15 2880,45 L2880,100 L1440,100 Z" style="fill: rgba(63,199,193,0.14)"></path>
+    </svg>
+  </div>
 
   <!-- =========================================================
        OM MIG
@@ -360,6 +388,14 @@
       </ol>
     </div>
   </section>
+
+  <!-- Vågformad övergång in i kontaktsektionen -->
+  <div class="wave-divider flip" aria-hidden="true">
+    <svg viewBox="0 0 2880 100" preserveAspectRatio="none">
+      <path d="M0,45 C 240,90 480,10 720,45 C 960,80 1200,15 1440,45 L1440,100 L0,100 Z" style="fill: rgba(7,12,16,0.6)"></path>
+      <path d="M1440,45 C 1680,90 1920,10 2160,45 C 2400,80 2640,15 2880,45 L2880,100 L1440,100 Z" style="fill: rgba(7,12,16,0.6)"></path>
+    </svg>
+  </div>
 
   <!-- =========================================================
        KONTAKT

@@ -3,7 +3,10 @@
    för att hoppa direkt dit:
 
    "DESIGNSYSTEM"     → färger, typsnitt (ändra här för att byta hela paletten)
-   "CURSOR-GLOW"      → ljuset som följer musen
+   "CURSOR-GLOW"      → det teal-färgade ljuset som följer musen
+   "RIPPLE-KLICK"     → krusningen som uppstår vid varje klick
+   "VATTEN-BAKGRUND"  → caustics (drivande ljus) + bubblor bakom hela sidan
+   "VÅGDELARE"        → de vågformade kanterna mellan sektioner
    "GRAIN-OVERLAY"    → det subtila "filmkorn"-lagret över hela sidan
    "KINETISK TYPOGRAFI" → bokstav-för-bokstav-animationen på hero-titeln
    "LADDNINGSSKÄRM"   → skärmen som visas när sidan öppnas
@@ -26,15 +29,18 @@
    Ändra en variabel här, och hela sidan uppdateras.
    ========================================================= */
 :root {
-  --bg-primary: #05070D;
-  --bg-secondary: #0B1220;
-  --bg-card: rgba(255, 255, 255, 0.04);
-  --accent: #3AA0FF;
-  --accent-secondary: #22D3EE;
+  /* Palett hämtad från din profilbild: nästan svart, dovt teal-ljus
+     genom vattnet, silvrig text som vattenreflektioner. */
+  --bg-primary: #04070A;
+  --bg-secondary: #070C10;
+  --bg-card: rgba(255, 255, 255, 0.035);
+  --accent: #3FC7C1;
+  --accent-secondary: #9FE8E3;
   --gradient: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  --text-primary: #F5F7FA;
-  --text-secondary: #93A1B8;
-  --border: rgba(255, 255, 255, 0.09);
+  --text-primary: #EEF3F3;
+  --text-secondary: #8CA0A1;
+  --border: rgba(255, 255, 255, 0.08);
+  --water-deep: #071A1C;
 
   --font-display: "Fraunces", serif;
   --font-body: "Inter", sans-serif;
@@ -50,9 +56,9 @@ html { scroll-behavior: smooth; }
 
 /* =========================================================
    CURSOR-GLOW
-   Ett mjukt, runt ljussken som följer musen. Styrs av script.js
-   (avsnitt "CURSOR-GLOW"), som uppdaterar left/top vid mousemove.
-   Rör absolut ingenting i sig själv — bara en positionerad cirkel.
+   Ett mjukt, runt teal-ljussken som följer musen. Styrs av
+   script.js (avsnitt "CURSOR-GLOW"), som uppdaterar left/top vid
+   mousemove. Rör absolut ingenting i sig själv — bara en cirkel.
    ========================================================= */
 .cursor-glow {
   position: fixed;
@@ -61,16 +67,114 @@ html { scroll-behavior: smooth; }
   width: 480px;
   height: 480px;
   border-radius: 50%;
-  pointer-events: none; /* så att den aldrig blockerar klick */
+  pointer-events: none;
   z-index: 5;
-  background: radial-gradient(circle, rgba(58, 160, 255, 0.16), transparent 70%);
+  background: radial-gradient(circle, rgba(63, 199, 193, 0.14), transparent 70%);
   transform: translate(-50%, -50%);
-  mix-blend-mode: screen; /* gör att glowen "lägger sig ovanpå" mörk bakgrund som ljus, inte som en grå fläck */
+  mix-blend-mode: screen;
   opacity: 0;
   transition: opacity 0.4s ease;
   will-change: transform;
 }
 .cursor-glow.is-active { opacity: 1; }
+
+/* =========================================================
+   RIPPLE-KLICK
+   Varje klick skapar en expanderande ring — som att röra vid en
+   vattenyta. script.js (avsnitt "RIPPLE-KLICK") skapar en ny
+   .ripple-ring vid klickpunkten och tar bort den när animationen
+   är klar.
+   ========================================================= */
+.ripple-ring {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  pointer-events: none;
+  z-index: 6;
+  transform: translate(-50%, -50%);
+  animation: rippleExpand 1s var(--ease) forwards;
+}
+@keyframes rippleExpand {
+  from { width: 12px; height: 12px; opacity: 0.6; }
+  to   { width: 220px; height: 220px; opacity: 0; }
+}
+
+/* =========================================================
+   VATTEN-BAKGRUND (caustics + bubblor)
+   Ett fast lager bakom allt innehåll som ger hela sidan en känsla
+   av att befinna sig under vattenytan. Två delar:
+   1) .caustics — långsamt drivande ljusfläckar (som solljus genom
+      vatten), ren CSS, ingen JavaScript behövs.
+   2) #bubbles — en tom behållare som script.js (avsnitt
+      "VATTENBUBBLOR") fyller med små bubblor som stiger uppåt.
+   ========================================================= */
+.caustics {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(500px 380px at 15% 20%, rgba(63, 199, 193, 0.10), transparent 70%),
+    radial-gradient(600px 420px at 85% 60%, rgba(159, 232, 227, 0.07), transparent 70%),
+    radial-gradient(450px 400px at 50% 95%, rgba(63, 199, 193, 0.08), transparent 70%),
+    var(--bg-primary);
+  background-size: 160% 160%, 180% 180%, 150% 150%, 100% 100%;
+  animation: causticsDrift 22s ease-in-out infinite alternate;
+}
+@keyframes causticsDrift {
+  0%   { background-position: 0% 0%, 100% 100%, 50% 100%, 0 0; }
+  100% { background-position: 20% 30%, 70% 60%, 40% 70%, 0 0; }
+}
+
+#bubbles {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bubble {
+  position: absolute;
+  bottom: -40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.45), rgba(159, 232, 227, 0.06) 70%);
+  border: 1px solid rgba(159, 232, 227, 0.18);
+  animation: bubbleRise linear infinite;
+}
+@keyframes bubbleRise {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.35; }
+  100% { transform: translate(var(--drift, 20px), -115vh); opacity: 0; }
+}
+
+/* =========================================================
+   VÅGDELARE
+   En vågformad SVG-kant mellan utvalda sektioner — som en
+   vattenyta — istället för en rak linje.
+   ========================================================= */
+.wave-divider {
+  display: block;
+  width: 100%;
+  height: 70px;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  line-height: 0;
+}
+.wave-divider svg {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  animation: waveDrift 18s linear infinite;
+}
+.wave-divider.flip svg { transform: scaleX(-1); }
+@keyframes waveDrift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
 
 /* =========================================================
    GRAIN-OVERLAY
@@ -128,6 +232,10 @@ ul, ol { list-style: none; }
 
 .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
 
+/* .caustics och #bubbles ligger på z-index 0–1 (fast bakgrund).
+   Allt riktigt innehåll måste ligga ovanpå det, annars döljs det. */
+header, main, footer { position: relative; z-index: 2; }
+
 /* =========================================================
    LADDNINGSSKÄRM
    ========================================================= */
@@ -152,8 +260,8 @@ ul, ol { list-style: none; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(600px 400px at 20% 20%, rgba(58, 160, 255, 0.16), transparent),
-    radial-gradient(500px 400px at 80% 80%, rgba(34, 211, 238, 0.14), transparent);
+    radial-gradient(600px 400px at 20% 20%, rgba(63, 199, 193, 0.16), transparent),
+    radial-gradient(500px 400px at 80% 80%, rgba(159, 232, 227, 0.14), transparent);
   animation: loadingDrift 8s ease-in-out infinite alternate;
 }
 @keyframes loadingDrift {
@@ -294,8 +402,8 @@ ul, ol { list-style: none; }
 .btn:hover { transform: translateY(-2px); }
 .btn:active { transform: translateY(0); }
 
-.btn-primary { background: var(--gradient); color: #05070D; font-weight: 600; box-shadow: 0 6px 24px rgba(58, 160, 255, 0.28); }
-.btn-primary:hover { box-shadow: 0 8px 30px rgba(34, 211, 238, 0.38); }
+.btn-primary { background: var(--gradient); color: #04070A; font-weight: 600; box-shadow: 0 6px 24px rgba(63, 199, 193, 0.28); }
+.btn-primary:hover { box-shadow: 0 8px 30px rgba(159, 232, 227, 0.38); }
 .btn-primary:disabled { opacity: 0.6; cursor: progress; transform: none; }
 
 .btn-ghost { border-color: var(--border); background: rgba(255, 255, 255, 0.02); }
@@ -316,21 +424,12 @@ ul, ol { list-style: none; }
 }
 
 .hero-bg { position: absolute; inset: 0; z-index: 0; }
-.hero-grid {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 40%, transparent 90%);
-  opacity: 0.5;
-}
-.hero-glow { position: absolute; border-radius: 50%; filter: blur(90px); animation: heroDrift 12s ease-in-out infinite alternate; }
-.hero-glow-1 { width: 420px; height: 420px; background: rgba(58, 160, 255, 0.28); top: -100px; right: 10%; }
-.hero-glow-2 { width: 360px; height: 360px; background: rgba(34, 211, 238, 0.22); bottom: -80px; left: 5%; animation-delay: -4s; }
+.hero-glow { position: absolute; border-radius: 50%; filter: blur(100px); animation: heroDrift 14s ease-in-out infinite alternate; }
+.hero-glow-1 { width: 460px; height: 460px; background: rgba(63, 199, 193, 0.22); top: -100px; right: 8%; }
+.hero-glow-2 { width: 380px; height: 380px; background: rgba(159, 232, 227, 0.14); bottom: -80px; left: 5%; animation-delay: -5s; }
 @keyframes heroDrift {
   from { transform: translate(0, 0) scale(1); }
-  to { transform: translate(-20px, 20px) scale(1.1); }
+  to { transform: translate(-24px, 24px) scale(1.12); }
 }
 
 .hero-inner {
@@ -394,14 +493,25 @@ ul, ol { list-style: none; }
   background: var(--gradient);
   background-size: 200% 200%;
   animation: borderShift 6s ease infinite;
-  box-shadow: 0 0 60px rgba(58, 160, 255, 0.25);
+  box-shadow: 0 0 70px rgba(63, 199, 193, 0.28);
   transform-style: preserve-3d; /* låter ::after-ringen rotera i samma 3D-rum */
-  transition: transform 0.15s ease-out, opacity 0.2s ease; /* mjukar ut varje uppdatering från script.js */
+  transition: opacity 0.2s ease; /* transform styrs helt av script.js varje bildruta — ingen CSS-transition där, annars blir guppningen hackig */
   will-change: transform;
 }
 @keyframes borderShift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
+}
+
+/* profile-clip: den runda "titthålet" som klipper bort allt som
+   sticker utanför cirkeln (bilden + våglinjen). Separat element
+   från .profile-frame, som bara sköter den roterande gradient-kanten. */
+.profile-clip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
 }
 .profile-frame img,
 .profile-fallback {
@@ -419,6 +529,47 @@ ul, ol { list-style: none; }
   font-weight: 600;
   color: var(--text-primary);
 }
+
+/* frame-wave: en animerad våglinje som ligger ovanpå bildens
+   nederkant — som vattenytan i ditt foto. Två vågor bredvid
+   varandra (200% bredd) glider i loop, precis som .wave-divider. */
+.frame-wave {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 200%;
+  height: 28%;
+  z-index: 2;
+  animation: waveDrift 9s linear infinite;
+}
+
+/* splash-droplets: ligger UTANFÖR .profile-clip (så de inte klipps
+   bort) och animerar kontinuerligt små droppar som studsar upp
+   från vattenlinjen och faller tillbaka — ett ständigt litet stänk. */
+.splash-droplets { position: absolute; inset: 0; pointer-events: none; }
+.droplet {
+  position: absolute;
+  bottom: 6%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--accent-secondary) 60%, transparent 100%);
+  opacity: 0;
+  animation: dropletSplash 3.4s ease-in infinite;
+}
+.droplet:nth-child(1) { left: 22%; animation-delay: 0s; }
+.droplet:nth-child(2) { left: 38%; width: 5px; height: 5px; animation-delay: 0.7s; }
+.droplet:nth-child(3) { left: 50%; animation-delay: 1.5s; }
+.droplet:nth-child(4) { left: 64%; width: 5px; height: 5px; animation-delay: 2.1s; }
+.droplet:nth-child(5) { left: 78%; animation-delay: 2.7s; }
+@keyframes dropletSplash {
+  0%   { transform: translateY(0) scale(0.4); opacity: 0; }
+  15%  { opacity: 1; }
+  40%  { transform: translateY(-34px) scale(1); opacity: 1; }
+  70%  { transform: translateY(-14px) scale(0.8); opacity: 0.5; }
+  100% { transform: translateY(6px) scale(0.3); opacity: 0; }
+}
+
 .profile-frame::after {
   content: "";
   position: absolute;
@@ -457,7 +608,7 @@ ul, ol { list-style: none; }
    SECTIONS (generella)
    ========================================================= */
 .section { padding: 110px 0; position: relative; }
-.section-alt { background: var(--bg-secondary); }
+.section-alt { background: rgba(7, 12, 16, 0.55); backdrop-filter: blur(2px); }
 
 .section-eyebrow { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 12px; }
 .section-title { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem, 3.4vw, 2.6rem); margin-bottom: 20px; }
@@ -502,7 +653,7 @@ ul, ol { list-style: none; }
 .skill-tag:hover {
   transform: translateY(-3px);
   border-color: var(--accent);
-  box-shadow: 0 8px 22px rgba(58, 160, 255, 0.22);
+  box-shadow: 0 8px 22px rgba(63, 199, 193, 0.22);
 }
 
 /* =========================================================
@@ -521,7 +672,7 @@ ul, ol { list-style: none; }
 .project-card:hover {
   transform: translateY(-6px);
   border-color: var(--accent);
-  box-shadow: 0 16px 40px rgba(58, 160, 255, 0.18);
+  box-shadow: 0 16px 40px rgba(63, 199, 193, 0.18);
 }
 
 .project-media { aspect-ratio: 16/10; overflow: hidden; position: relative; }
@@ -530,10 +681,10 @@ ul, ol { list-style: none; }
   transition: transform 0.5s var(--ease);
 }
 .project-card:hover .project-media-placeholder { transform: scale(1.06); }
-.ph-1 { background: linear-gradient(135deg, #1E3A8A, #22D3EE); }
-.ph-2 { background: linear-gradient(135deg, #312E81, #3AA0FF); }
-.ph-3 { background: linear-gradient(135deg, #0F766E, #22D3EE); }
-.ph-4 { background: linear-gradient(135deg, #1E293B, #3AA0FF); }
+.ph-1 { background: linear-gradient(135deg, #0B3A3D, #9FE8E3); }
+.ph-2 { background: linear-gradient(135deg, #0F2027, #3FC7C1); }
+.ph-3 { background: linear-gradient(135deg, #062B2E, #9FE8E3); }
+.ph-4 { background: linear-gradient(135deg, #10262B, #3FC7C1); }
 
 .project-body { padding: 22px; }
 .project-body h3 { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 8px; }
@@ -545,7 +696,7 @@ ul, ol { list-style: none; }
   font-size: 0.72rem;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(58, 160, 255, 0.1);
+  background: rgba(63, 199, 193, 0.1);
   color: var(--accent-secondary);
 }
 
@@ -572,7 +723,7 @@ ul, ol { list-style: none; }
   border-radius: 50%;
   background: var(--bg-primary);
   border: 2px solid var(--accent);
-  box-shadow: 0 0 0 4px rgba(58, 160, 255, 0.14);
+  box-shadow: 0 0 0 4px rgba(63, 199, 193, 0.14);
 }
 .timeline-period { font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-secondary); letter-spacing: 0.05em; }
 .timeline-content h3 { font-family: var(--font-display); font-size: 1.15rem; margin: 6px 0 4px; }
@@ -615,7 +766,7 @@ ul, ol { list-style: none; }
 .form-field input:focus, .form-field textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(58, 160, 255, 0.18);
+  box-shadow: 0 0 0 3px rgba(63, 199, 193, 0.18);
 }
 .form-field.has-error input,
 .form-field.has-error textarea { border-color: #F87171; }
@@ -697,7 +848,8 @@ ul, ol { list-style: none; }
   html { scroll-behavior: auto; }
   .reveal { transition: opacity 0.4s ease; transform: none !important; }
   .hero-glow, .loading-bg, .profile-frame, .scroll-cue span { animation: none !important; }
-  .cursor-glow { display: none; } /* script.js aktiverar den ändå aldrig i detta läge, men extra skydd */
+  .cursor-glow, .ripple-ring, #bubbles { display: none; } /* script.js skapar dem ändå aldrig i detta läge, men extra skydd */
   .kinetic-letter { opacity: 1; transform: none; animation: none; } /* visa texten direkt, ingen stagger */
+  .caustics, .frame-wave, .wave-divider svg, .droplet { animation: none !important; }
   * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
 }
