@@ -4,12 +4,12 @@
    ========================================================= */
 :root {
   /* Färger */
-  --ink: #1B2430;          /* Mörk text / mörk bakgrund */
-  --paper: #F4F4EF;        /* Ljus "pappers"-bakgrund */
-  --paper-soft: #EAE8DF;   /* Lite mörkare variant för omväxling */
-  --moss: #4E6E58;         /* Huvudaccent, lugn grön */
-  --rust: #C1543C;         /* Liten accent, "status/live"-känsla */
-  --line: rgba(27, 36, 48, 0.12);
+  --ink: #1B2340;          /* Mörk text / mörk bakgrund, med en aning blått */
+  --paper: #F7F9FC;        /* Ljus, kylig "pappers"-bakgrund */
+  --paper-soft: #EAF0FB;   /* Ljust blåtonad variant för omväxling */
+  --moss: #3D5AF1;         /* Huvudaccent: levande, proffsig blå */
+  --rust: #FF6B4A;         /* Liten accent: varm korall, "status/live"-känsla */
+  --line: rgba(27, 35, 64, 0.1);
 
   /* Typografi */
   --font-display: "Fraunces", serif;
@@ -110,6 +110,9 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   padding: 120px 0 100px;
   overflow: hidden;
+  background:
+    radial-gradient(600px 400px at 85% -10%, rgba(61, 90, 241, 0.10), transparent),
+    radial-gradient(500px 350px at -10% 90%, rgba(255, 107, 74, 0.08), transparent);
 }
 
 .hero-inner { max-width: 640px; }
@@ -129,7 +132,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.08;
   margin-bottom: 24px;
 }
-.hero-title .accent { color: var(--moss); font-style: italic; }
+.hero-title .accent { color: var(--moss); font-style: italic; text-shadow: 2px 2px 0 rgba(61, 90, 241, 0.15); }
 
 .hero-sub {
   font-size: 1.05rem;
