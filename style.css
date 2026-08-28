@@ -339,21 +339,11 @@ ul, ol { list-style: none; }
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
-.profile-frame img,
-.profile-fallback {
+.profile-frame img {
   width: 100%; height: 100%;
   border-radius: 50%;
   object-fit: cover;
   background: var(--bg-secondary);
-}
-.profile-fallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-size: 3rem;
-  font-weight: 600;
-  color: var(--text-primary);
 }
 .profile-frame::after {
   content: "";
