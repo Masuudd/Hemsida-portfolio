@@ -602,7 +602,7 @@ ul, ol { list-style: none; }
   .nav-toggle { display: flex; }
   .main-nav {
     position: fixed;
-    top: 72px; left: 0; right: 0;
+    top: 64px; left: 0; right: 0;
     background: rgba(5, 7, 13, 0.97);
     backdrop-filter: blur(10px);
     flex-direction: column;
