@@ -132,23 +132,6 @@ ul, ol { list-style: none; }
   letter-spacing: 0.08em;
 }
 
-/* Ljudkontroller */
-.sound-fallback-btn, .sound-toggle-btn {
-  position: fixed;
-  z-index: 1000;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  border: 1px solid var(--border);
-  background: rgba(11, 18, 32, 0.85);
-  backdrop-filter: blur(8px);
-  color: var(--text-primary);
-  border-radius: 999px;
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-.sound-fallback-btn { bottom: 24px; left: 24px; padding: 10px 18px; }
-.sound-toggle-btn { bottom: 24px; right: 24px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
-.sound-fallback-btn:hover, .sound-toggle-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
-
 /* =========================================================
    HEADER / NAV
    ========================================================= */

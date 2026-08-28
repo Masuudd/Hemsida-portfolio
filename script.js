@@ -18,19 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // Lås scroll medan laddningsskärmen visas
   document.body.style.overflow = "hidden";
 
-  // =========================================================
-  // 2. INTRO-MUSIK (10 sekunder, ingen loop)
-  // =========================================================
-  const introAudio = document.getElementById("introAudio");
-  const soundToggleBtn = document.getElementById("soundToggleBtn");
-  const soundIcon = document.getElementById("soundIcon");
-  const MUSIC_DURATION_MS = 2400;
-  let musicTimer = null;
-
+  const LOADING_DURATION_MS = 2400;
   const loadingStartedAt = performance.now();
   const loadingInterval = setInterval(() => {
     const elapsed = performance.now() - loadingStartedAt;
-    const progress = Math.min((elapsed / MUSIC_DURATION_MS) * 100, 100);
+    const progress = Math.min((elapsed / LOADING_DURATION_MS) * 100, 100);
     loadingBarFill.style.width = progress + "%";
 
     if (progress >= 100) {
@@ -41,46 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, 100);
 
-  function stopIntroMusic() {
-    introAudio.pause();
-    introAudio.currentTime = 0;
-    if (musicTimer) clearTimeout(musicTimer);
-  }
-
-  function playIntroMusic() {
-    introAudio.currentTime = 0;
-    const playPromise = introAudio.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          musicTimer = setTimeout(stopIntroMusic, MUSIC_DURATION_MS);
-        })
-        .catch(() => {
-          // Webbläsaren blockerade autoplay — visa fallback-knappen.
-          // Vi försöker INTE kringgå detta, det är webbläsarens säkerhetsregel.
-        });
-    }
-  }
-
-  // Försök spela automatiskt när sidan är redo (bara om filen faktiskt finns)
-  introAudio.addEventListener("error", () => {
-    // Ingen musikfil hittades — det är okej, sidan fungerar ändå.
-  });
-  playIntroMusic();
-
-  // Ett klick på laddningsskärmen räknas som användarinteraktion och kan låsa upp ljudet.
-  loadingScreen.addEventListener("click", playIntroMusic);
-
-  soundToggleBtn.addEventListener("click", () => {
-    introAudio.muted = !introAudio.muted;
-    soundIcon.textContent = introAudio.muted ? "🔇" : "🔊";
-    soundToggleBtn.setAttribute("aria-label", introAudio.muted ? "Slå på ljud" : "Stäng av ljud");
-    soundToggleBtn.setAttribute("title", introAudio.muted ? "Slå på ljud" : "Stäng av ljud");
-  });
-
-
   // =========================================================
-  // 3. HEADER: byt stil vid scroll
+  // 2. HEADER: byt stil vid scroll
   // =========================================================
   const siteHeader = document.getElementById("siteHeader");
   function updateHeaderStyle() {

@@ -9,9 +9,9 @@ En personlig portfolio-hemsida byggd med rent HTML, CSS och JavaScript
 portfolio/
 ├── index.html      Sidans struktur och innehåll
 ├── style.css        Allt utseende (färger, layout, animationer)
-├── script.js        All interaktivitet (meny, formulär, animationer, musik)
+├── script.js        All interaktivitet (meny, formulär och animationer)
 ├── profile.jpg      Din profilbild
-└── music.mp3        Din 10-sekunders intro-musik
+└── README.md        Den här filen
 ```
 
 ## Hur jag lägger till min profilbild
@@ -20,15 +20,6 @@ portfolio/
 2. Lägg filen i samma mapp som `index.html`.
 3. Klart — `index.html` letar automatiskt efter `profile.jpg`.
 4. Om filen saknas visas istället automatiskt dina initialer ("MA") i en cirkel, så sidan ser fortfarande bra ut.
-
-## Hur jag lägger till min musik
-
-1. Döp din ljudfil till exakt `music.mp3`.
-2. Lägg den i samma mapp som `index.html`.
-3. Musiken försöker spelas automatiskt i 10 sekunder när sidan öppnas, och stoppas sedan av sig själv.
-4. Musiken spelas automatiskt under introsekvensens 10 sekunder.
-5. Ljudet kan stängas av eller sättas på med mute-knappen nere till höger.
-6. Saknas filen helt fungerar sidan ändå precis som vanligt — inget går sönder.
 
 ## Hur jag ändrar mitt namn
 
