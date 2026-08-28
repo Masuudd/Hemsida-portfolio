@@ -204,12 +204,11 @@ html { scroll-behavior: smooth; }
   opacity: 0;
   transform: translateY(30px) rotate(6deg);
   animation: letterIn 0.7s var(--ease) forwards;
-  /* Vanlig, säker textfärg — ärvs annars från .hero-title ändå,
-     men skrivs ut explicit här för tydlighetens skull. Vi använde
-     tidigare en gradient-text-effekt (background-clip: text), men
-     den krånglade i vissa webbläsare (texten syntes bara när man
-     markerade den) — så vi bytte till vanlig färg, som alltid funkar. */
-  color: #FFFFFF;
+  /* !important + -webkit-text-fill-color: samma härdning som .hero-title,
+     så bokstäverna aldrig kan bli transparenta av misstag. */
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  background: none !important;
 }
 @keyframes letterIn {
   to { opacity: 1; transform: translateY(0) rotate(0deg); }
@@ -462,7 +461,12 @@ header, main, footer { position: relative; z-index: 2; }
   line-height: 1.02;
   letter-spacing: -0.01em;
   margin-bottom: 18px;
-  color: #FFFFFF; /* vanlig, garanterat synlig vit text — samma färg som .kinetic-letter använder */
+  /* !important + -webkit-text-fill-color: nollställer ALLT som skulle
+     kunna göra texten transparent, oavsett vad som står någon
+     annanstans i filen. Detta kan inte längre bli osynligt. */
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  background: none !important;
 }
 
 .hero-role {
