@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ditt Namn — Portfolio</title>
+
+  <!-- Google Fonts: en display-font för rubriker + en "mono"-font för etiketter/kod-känsla -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== HEADER / NAV ===== -->
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="#hero" class="logo">DN<span class="dot">.</span></a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Öppna m
+      eny" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="#about" class="nav-link">Om mig</a>
+        <a href="#skills" class="nav-link">Kunskaper</a>
+        <a href="#projects" class="nav-link">Projekt</a>
+        <a href="#contact" class="nav-link">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===== HERO ===== -->
+    <section id="hero" class="hero">
+      <div class="wrap hero-inner">
+        <p class="catalog-code">CV — 2026.01</p>
+        <h1 class="hero-title">Hej, jag heter<br><span class="accent">Ditt Namn</span>.</h1>
+        <p class="hero-sub">
+          Jag är [t.ex. gymnasieelev / student] med intresse för [dina ämnen/intressen].
+          Den här sidan är min digitala "katalogsamling" — ett litet arkiv över
+          vem jag är, vad jag kan och vad jag har byggt.
+        </p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary">Se mina projekt</a>
+          <a href="#contact" class="btn btn-ghost">Kontakta mig</a>
+        </div>
+      </div>
+      <div class="status-card" id="statusCard">
+        <span class="status-dot"></span>
+        <span id="statusText">Status: Bygger denna sida</span>
+      </div>
+    </section>
+
+    <!-- ===== OM MIG ===== -->
+    <section id="about" class="section">
+      <div class="wrap">
+        <p class="section-code">P — 01</p>
+        <h2 class="section-title">Om mig</h2>
+        <div class="about-grid">
+          <p class="about-text">
+            Skriv 2–4 meningar om dig själv här. Vem är du, vad brinner du för,
+            vad läser du eller vad jobbar du med just nu? Du kan också nämna
+            något litet och personligt — ett intresse, en hobby, något som gör
+            dig till dig.
+          </p>
+          <ul class="fact-list">
+            <li><span>Bor i</span><strong>Stad, Land</strong></li>
+            <li><span>Studerar</span><strong>Din utbildning</strong></li>
+            <li><span>Intresserad av</span><strong>Dina ämnen</strong></li>
+            <li><span>Just nu</span><strong>Vad du gör just nu</strong></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== KUNSKAPER ===== -->
+    <section id="skills" class="section section-alt">
+      <div class="wrap">
+        <p class="section-code">P — 02</p>
+        <h2 class="section-title">Kunskaper</h2>
+        <div class="skills-grid" id="skillsGrid">
+          <!-- Varje "kort" är en färdighet. Byt text och siffra (0–100) efter din nivå. -->
+          <div class="skill-card" data-level="70">
+            <h3>HTML</h3>
+            <div class="skill-bar"><div class="skill-fill"></div></div>
+          </div>
+          <div class="skill-card" data-level="60">
+            <h3>CSS</h3>
+            <div class="skill-bar"><div class="skill-fill"></div></div>
+          </div>
+          <div class="skill-card" data-level="40">
+            <h3>JavaScript</h3>
+            <div class="skill-bar"><div class="skill-fill"></div></div>
+          </div>
+          <div class="skill-card" data-level="55">
+            <h3>Ditt ämne</h3>
+            <div class="skill-bar"><div class="skill-fill"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROJEKT ===== -->
+    <section id="projects" class="section">
+      <div class="wrap">
+        <p class="section-code">P — 03</p>
+        <h2 class="section-title">Projekt</h2>
+        <p class="section-hint">Klicka på ett kort för att vända det.</p>
+
+        <div class="card-catalog">
+          <button class="flip-card" type="button">
+            <div class="flip-inner">
+              <div class="flip-front">
+                <span class="catalog-code">PRJ.01</span>
+                <h3>Projektnamn 1</h3>
+                <span class="flip-hint">Klicka för info →</span>
+              </div>
+              <div class="flip-back">
+                <p>Kort beskrivning: vad projektet gör, vilka verktyg du använde
+                och vad du lärde dig.</p>
+                <a href="#" class="btn btn-small">Länk till projekt</a>
+              </div>
+            </div>
+          </button>
+
+          <button class="flip-card" type="button">
+            <div class="flip-inner">
+              <div class="flip-front">
+                <span class="catalog-code">PRJ.02</span>
+                <h3>Projektnamn 2</h3>
+                <span class="flip-hint">Klicka för info →</span>
+              </div>
+              <div class="flip-back">
+                <p>Kort beskrivning av projekt två. Byt ut mot ditt eget skolarbete
+                eller sidoprojekt.</p>
+                <a href="#" class="btn btn-small">Länk till projekt</a>
+              </div>
+            </div>
+          </button>
+
+          <button class="flip-card" type="button">
+            <div class="flip-inner">
+              <div class="flip-front">
+                <span class="catalog-code">PRJ.03</span>
+                <h3>Denna hemsida</h3>
+                <span class="flip-hint">Klicka för info →</span>
+              </div>
+              <div class="flip-back">
+                <p>Min egen portfolio, byggd med HTML, CSS och JavaScript och
+                publicerad med GitHub Pages.</p>
+                <a href="#" class="btn btn-small">Se koden</a>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== KONTAKT ===== -->
+    <section id="contact" class="section section-alt">
+      <div class="wrap contact-inner">
+        <p class="section-code">P — 04</p>
+        <h2 class="section-title">Kontakt</h2>
+        <p class="contact-text">Hör gärna av dig — här är mina vägar in.</p>
+
+        <div class="contact-row">
+          <button class="btn btn-primary" id="copyEmailBtn" data-email="ditt.namn@example.com">
+            E-post: ditt.namn@example.com
+          </button>
+          <a href="#" class="btn btn-ghost" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="#" class="btn btn-ghost" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <p class="copy-feedback" id="copyFeedback" aria-live="polite"></p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>&copy; <span id="year"></span> Ditt Namn. Byggd med HTML, CSS &amp; JavaScript.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
