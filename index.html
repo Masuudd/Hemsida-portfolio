@@ -1,192 +1,445 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Masuud Ali — Portfolio</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masuud Ali — Portfolio</title>
+<meta name="description" content="Masuud Ali — student inom systemutveckling. Personlig portfolio med projekt, kompetenser, utbildning och kontaktuppgifter.">
 
-  <!-- Google Fonts: en display-font för rubriker + en "mono"-font för etiketter/kod-känsla -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Open Graph -->
+<meta property="og:title" content="Masuud Ali — Portfolio">
+<meta property="og:description" content="Student inom systemutveckling. Se mina projekt och kompetenser.">
+<meta property="og:type" content="website">
 
-  <link rel="stylesheet" href="style.css">
+<!-- Typsnitt: en display-font för rubriker + en mono-font för etiketter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- ===== HEADER / NAV ===== -->
-  <header class="site-header">
-    <div class="wrap header-inner">
-      <a href="#hero" class="logo">MA<span class="dot">.</span></a>
-
-      <button class="nav-toggle" id="navToggle" aria-label="Öppna meny" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-
-      <nav class="main-nav" id="mainNav">
-        <a href="#about" class="nav-link">Om mig</a>
-        <a href="#skills" class="nav-link">Kunskaper</a>
-        <a href="#projects" class="nav-link">Projekt</a>
-        <a href="#contact" class="nav-link">Kontakt</a>
-      </nav>
+<!-- =========================================================
+     LADDNINGSSKÄRM
+     Visas först, döljs av script.js när sidan är redo.
+     ========================================================= -->
+<div id="loadingScreen" class="loading-screen" aria-hidden="true">
+  <div class="loading-bg"></div>
+  <div class="loading-content">
+    <p class="loading-name">
+      <span data-letters>MASUUD ALI</span>
+    </p>
+    <p class="loading-sub">PORTFOLIO</p>
+    <div class="loading-bar-track">
+      <div class="loading-bar-fill" id="loadingBarFill"></div>
     </div>
-  </header>
+    <p class="loading-status" id="loadingStatus">Laddar...</p>
+  </div>
+</div>
 
-  <main>
+<!-- Ljud för intro (10 sekunder). Se README för hur du lägger till filen. -->
+<audio id="introAudio" src="assets/music.mp3" preload="auto"></audio>
 
-    <!-- ===== HERO ===== -->
-    <section id="hero" class="hero">
-      <div class="wrap hero-inner">
-        <p class="catalog-code">CV — 2026.01</p>
-        <h1 class="hero-title">Hej, jag heter<br><span class="accent">Masuud Ali</span>.</h1>
-        <p class="hero-sub">
-          Jag är en student inom systemutveckling med intresse för att skapa
-          och lösa problem inom IT-världen. Den här sidan är min digitala
-          "katalogsamling" — ett litet arkiv över vem jag är, vad jag kan
-          och vad jag har byggt.
+<!-- Diskret fallback-knapp om webbläsaren blockerar autoplay -->
+<button id="enableSoundBtn" class="sound-fallback-btn" type="button" hidden>
+  🔊 Aktivera ljud
+</button>
+
+<!-- Diskret permanent ljudkontroll -->
+<button id="soundToggleBtn" class="sound-toggle-btn" type="button" aria-label="Ljud av/på" title="Ljud av/på">
+  <span id="soundIcon">🔈</span>
+</button>
+
+<!-- =========================================================
+     HEADER / NAVIGATION
+     ========================================================= -->
+<header class="site-header" id="siteHeader">
+  <div class="wrap header-inner">
+    <a href="#hero" class="logo">MA<span class="dot">.</span></a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Öppna meny" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="#hero" class="nav-link" data-nav="hero">Hem</a>
+      <a href="#about" class="nav-link" data-nav="about">Om mig</a>
+      <a href="#skills" class="nav-link" data-nav="skills">Kompetenser</a>
+      <a href="#projects" class="nav-link" data-nav="projects">Projekt</a>
+      <a href="#education" class="nav-link" data-nav="education">Utbildning</a>
+      <a href="#experience" class="nav-link" data-nav="experience">Erfarenhet</a>
+      <a href="#contact" class="nav-link" data-nav="contact">Kontakt</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- =========================================================
+       HERO
+       ========================================================= -->
+  <section id="hero" class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-grid"></div>
+      <div class="hero-glow hero-glow-1"></div>
+      <div class="hero-glow hero-glow-2"></div>
+    </div>
+
+    <div class="wrap hero-inner">
+      <div class="hero-text">
+        <p class="eyebrow reveal" data-reveal="fade">HEJ, JAG ÄR</p>
+        <h1 class="hero-title reveal" data-reveal="slide-up" data-delay="80">MASUUD ALI</h1>
+        <p class="hero-role reveal" data-reveal="slide-up" data-delay="160">[DIN TITEL] — t.ex. "Student &amp; blivande utvecklare"</p>
+        <p class="hero-desc reveal" data-reveal="slide-up" data-delay="240">
+          Jag tycker om att skapa moderna digitala lösningar och utvecklas
+          inom programmering, webbutveckling och teknik.
         </p>
-        <div class="hero-actions">
+        <div class="hero-actions reveal" data-reveal="slide-up" data-delay="320">
           <a href="#projects" class="btn btn-primary">Se mina projekt</a>
           <a href="#contact" class="btn btn-ghost">Kontakta mig</a>
         </div>
       </div>
-      <div class="status-card" id="statusCard">
-        <span class="status-dot"></span>
-        <span id="statusText">Status: Bygger denna sida</span>
-      </div>
-    </section>
 
-    <!-- ===== OM MIG ===== -->
-    <section id="about" class="section">
-      <div class="wrap">
-        <p class="section-code">P — 01</p>
-        <h2 class="section-title">Om mig</h2>
-        <div class="about-grid">
-          <p class="about-text">
-            Jag är en student inom systemutveckling med ett stort intresse för
-            att bygga saker och lösa problem med kod. Jag gillar att lära mig
-            genom att testa, bryta sönder och sätta ihop igen — den här sidan
-            är själv ett exempel på det.
+      <div class="hero-media reveal" data-reveal="scale" data-delay="200">
+        <div class="profile-frame">
+          <img
+            src="assets/profile.jpg"
+            alt="Porträtt av Masuud Ali"
+            id="profileImg"
+            onerror="this.style.display='none'; document.getElementById('profileFallback').hidden=false;">
+          <div class="profile-fallback" id="profileFallback" hidden>MA</div>
+        </div>
+      </div>
+    </div>
+
+    <a href="#about" class="scroll-cue" aria-label="Scrolla ner">
+      <span></span>
+    </a>
+  </section>
+
+  <!-- =========================================================
+       OM MIG
+       ========================================================= -->
+  <section id="about" class="section">
+    <div class="wrap">
+      <p class="section-eyebrow reveal" data-reveal="fade">P — 01</p>
+      <h2 class="section-title reveal" data-reveal="slide-up">Om mig</h2>
+
+      <div class="about-grid">
+        <div class="about-text reveal" data-reveal="slide-up" data-delay="80">
+          <p>
+            [DIN BESKRIVNING] — Skriv här vem du är, vad du studerar, vilka
+            intressen du har, vad du håller på att lära dig just nu och vad
+            dina mål och framtidsplaner är. Två till fyra meningar räcker för
+            att ge en tydlig bild av dig.
           </p>
+          <p>
+            Jag gillar att lära mig genom att bygga saker på riktigt — testa,
+            bryta sönder och sätta ihop igen. Den här sidan är själv ett
+            exempel på det.
+          </p>
+        </div>
+
+        <div class="quick-facts reveal" data-reveal="slide-up" data-delay="160">
+          <h3 class="quick-facts-title">Snabbfakta</h3>
           <ul class="fact-list">
-            <li><span>Bor i</span><strong>Göteborg, Sverige</strong></li>
-            <li><span>Studerar</span><strong>Systemutveckling</strong></li>
-            <li><span>Intresserad av</span><strong>Programmering</strong></li>
-            <li><span>Just nu</span><strong>Bygger min portfolio</strong></li>
+            <li><span>Plats</span><strong>Göteborg, Sverige</strong></li>
+            <li><span>Utbildning</span><strong>[DIN UTBILDNING]</strong></li>
+            <li><span>Skola</span><strong>[DIN SKOLA]</strong></li>
+            <li><span>Fokus</span><strong>[DITT FOKUS]</strong></li>
+            <li><span>Språk</span><strong>Svenska / Engelska</strong></li>
           </ul>
         </div>
       </div>
-    </section>
-
-    <!-- ===== KUNSKAPER ===== -->
-    <section id="skills" class="section section-alt">
-      <div class="wrap">
-        <p class="section-code">P — 02</p>
-        <h2 class="section-title">Kunskaper</h2>
-        <div class="skills-grid" id="skillsGrid">
-          <!-- Varje "kort" är en färdighet. Byt text och siffra (0–100) efter din nivå. -->
-          <div class="skill-card" data-level="70">
-            <h3>HTML</h3>
-            <div class="skill-bar"><div class="skill-fill"></div></div>
-          </div>
-          <div class="skill-card" data-level="60">
-            <h3>CSS</h3>
-            <div class="skill-bar"><div class="skill-fill"></div></div>
-          </div>
-          <div class="skill-card" data-level="40">
-            <h3>JavaScript</h3>
-            <div class="skill-bar"><div class="skill-fill"></div></div>
-          </div>
-          <div class="skill-card" data-level="55">
-            <h3>Programmering</h3>
-            <div class="skill-bar"><div class="skill-fill"></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== PROJEKT ===== -->
-    <section id="projects" class="section">
-      <div class="wrap">
-        <p class="section-code">P — 03</p>
-        <h2 class="section-title">Projekt</h2>
-        <p class="section-hint">Klicka på ett kort för att vända det.</p>
-
-        <div class="card-catalog">
-          <button class="flip-card" type="button">
-            <div class="flip-inner">
-              <div class="flip-front">
-                <span class="catalog-code">PRJ.01</span>
-                <h3>Projektnamn 1</h3>
-                <span class="flip-hint">Klicka för info →</span>
-              </div>
-              <div class="flip-back">
-                <p>Kort beskrivning: vad projektet gör, vilka verktyg du använde
-                och vad du lärde dig.</p>
-                <a href="#" class="btn btn-small">Länk till projekt</a>
-              </div>
-            </div>
-          </button>
-
-          <button class="flip-card" type="button">
-            <div class="flip-inner">
-              <div class="flip-front">
-                <span class="catalog-code">PRJ.02</span>
-                <h3>Projektnamn 2</h3>
-                <span class="flip-hint">Klicka för info →</span>
-              </div>
-              <div class="flip-back">
-                <p>Kort beskrivning av projekt två. Byt ut mot ditt eget skolarbete
-                eller sidoprojekt.</p>
-                <a href="#" class="btn btn-small">Länk till projekt</a>
-              </div>
-            </div>
-          </button>
-
-          <button class="flip-card" type="button">
-            <div class="flip-inner">
-              <div class="flip-front">
-                <span class="catalog-code">PRJ.03</span>
-                <h3>Denna hemsida</h3>
-                <span class="flip-hint">Klicka för info →</span>
-              </div>
-              <div class="flip-back">
-                <p>Min egen portfolio, byggd med HTML, CSS och JavaScript och
-                publicerad med GitHub Pages.</p>
-                <a href="#" class="btn btn-small">Se koden</a>
-              </div>
-            </div>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== KONTAKT ===== -->
-    <section id="contact" class="section section-alt">
-      <div class="wrap contact-inner">
-        <p class="section-code">P — 04</p>
-        <h2 class="section-title">Kontakt</h2>
-        <p class="contact-text">Hör gärna av dig — här är mina vägar in.</p>
-
-        <div class="contact-row">
-          <button class="btn btn-primary" id="copyEmailBtn" data-email="Masuud5@gmail.com">
-            E-post: Masuud5@gmail.com
-          </button>
-          <a href="#" class="btn btn-ghost" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="#" class="btn btn-ghost" target="_blank" rel="noopener">GitHub</a>
-        </div>
-        <p class="copy-feedback" id="copyFeedback" aria-live="polite"></p>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="site-footer">
-    <div class="wrap">
-      <p>&copy; <span id="year"></span> Masuud Ali. Byggd med HTML, CSS &amp; JavaScript.</p>
     </div>
-  </footer>
+  </section>
 
-  <script src="script.js"></script>
+  <!-- =========================================================
+       KOMPETENSER
+       ========================================================= -->
+  <section id="skills" class="section section-alt">
+    <div class="wrap">
+      <p class="section-eyebrow reveal" data-reveal="fade">P — 02</p>
+      <h2 class="section-title reveal" data-reveal="slide-up">Kompetenser</h2>
+      <p class="section-hint reveal" data-reveal="fade" data-delay="80">
+        Detta är exempel — lägg enkelt till eller ta bort kort i index.html.
+      </p>
+
+      <div class="skills-columns">
+        <div class="skills-category reveal" data-reveal="slide-up" data-delay="0">
+          <h3 class="skills-category-title">Frontend</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">HTML</span>
+            <span class="skill-tag">CSS</span>
+            <span class="skill-tag">JavaScript</span>
+          </div>
+        </div>
+
+        <div class="skills-category reveal" data-reveal="slide-up" data-delay="120">
+          <h3 class="skills-category-title">Verktyg</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Git</span>
+            <span class="skill-tag">GitHub</span>
+            <span class="skill-tag">VS Code</span>
+          </div>
+        </div>
+
+        <div class="skills-category reveal" data-reveal="slide-up" data-delay="240">
+          <h3 class="skills-category-title">Övrigt</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Java</span>
+            <span class="skill-tag">SQL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       PROJEKT
+       ========================================================= -->
+  <section id="projects" class="section">
+    <div class="wrap">
+      <p class="section-eyebrow reveal" data-reveal="fade">P — 03</p>
+      <h2 class="section-title reveal" data-reveal="slide-up">Mina projekt</h2>
+
+      <div class="projects-grid">
+
+        <article class="project-card reveal" data-reveal="slide-up" data-delay="0">
+          <div class="project-media">
+            <div class="project-media-placeholder ph-1"></div>
+          </div>
+          <div class="project-body">
+            <h3>Personlig portfolio</h3>
+            <p>En modern, responsiv portfolio skapad med HTML, CSS och JavaScript — den här hemsidan.</p>
+            <div class="tech-tags">
+              <span>HTML</span><span>CSS</span><span>JavaScript</span>
+            </div>
+            <div class="project-links">
+              <a href="[DIN GITHUB]" class="btn btn-small btn-ghost" target="_blank" rel="noopener">GitHub</a>
+              <a href="#" class="btn btn-small btn-primary" target="_blank" rel="noopener">Live Demo</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal" data-reveal="slide-up" data-delay="90">
+          <div class="project-media">
+            <div class="project-media-placeholder ph-2"></div>
+          </div>
+          <div class="project-body">
+            <h3>[PROJEKTNAMN 2]</h3>
+            <p>[Kort beskrivning av vad projektet gör, vilket problem det löser och vad du lärde dig.]</p>
+            <div class="tech-tags">
+              <span>HTML</span><span>CSS</span>
+            </div>
+            <div class="project-links">
+              <a href="[DIN GITHUB]" class="btn btn-small btn-ghost" target="_blank" rel="noopener">GitHub</a>
+              <a href="#" class="btn btn-small btn-primary" target="_blank" rel="noopener">Live Demo</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal" data-reveal="slide-up" data-delay="180">
+          <div class="project-media">
+            <div class="project-media-placeholder ph-3"></div>
+          </div>
+          <div class="project-body">
+            <h3>[PROJEKTNAMN 3]</h3>
+            <p>[Kort beskrivning av projektet — vilka verktyg du använde och resultatet.]</p>
+            <div class="tech-tags">
+              <span>JavaScript</span><span>Python</span>
+            </div>
+            <div class="project-links">
+              <a href="[DIN GITHUB]" class="btn btn-small btn-ghost" target="_blank" rel="noopener">GitHub</a>
+              <a href="#" class="btn btn-small btn-primary" target="_blank" rel="noopener">Live Demo</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal" data-reveal="slide-up" data-delay="270">
+          <div class="project-media">
+            <div class="project-media-placeholder ph-4"></div>
+          </div>
+          <div class="project-body">
+            <h3>[PROJEKTNAMN 4]</h3>
+            <p>[Kort beskrivning. Byt gärna ut mot ett skolarbete eller sidoprojekt.]</p>
+            <div class="tech-tags">
+              <span>SQL</span><span>Java</span>
+            </div>
+            <div class="project-links">
+              <a href="[DIN GITHUB]" class="btn btn-small btn-ghost" target="_blank" rel="noopener">GitHub</a>
+              <a href="#" class="btn btn-small btn-primary" target="_blank" rel="noopener">Live Demo</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       UTBILDNING
+       ========================================================= -->
+  <section id="education" class="section section-alt">
+    <div class="wrap">
+      <p class="section-eyebrow reveal" data-reveal="fade">P — 04</p>
+      <h2 class="section-title reveal" data-reveal="slide-up">Utbildning</h2>
+
+      <ol class="timeline">
+        <li class="timeline-item reveal" data-reveal="slide-right" data-delay="0">
+          <span class="timeline-dot"></span>
+          <div class="timeline-content">
+            <span class="timeline-period">2026 — Pågående</span>
+            <h3>[SKOLANS NAMN]</h3>
+            <p class="timeline-role">[DIN UTBILDNING]</p>
+            <p>[Kort beskrivning av vad utbildningen innehåller och vad du lär dig.]</p>
+          </div>
+        </li>
+        <li class="timeline-item reveal" data-reveal="slide-right" data-delay="140">
+          <span class="timeline-dot"></span>
+          <div class="timeline-content">
+            <span class="timeline-period">2025</span>
+            <h3>[UTBILDNING / KURS]</h3>
+            <p>[Kort beskrivning av kursen eller utbildningen.]</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       ERFARENHET
+       ========================================================= -->
+  <section id="experience" class="section">
+    <div class="wrap">
+      <p class="section-eyebrow reveal" data-reveal="fade">P — 05</p>
+      <h2 class="section-title reveal" data-reveal="slide-up">Erfarenhet</h2>
+
+      <ol class="timeline">
+        <li class="timeline-item reveal" data-reveal="slide-right" data-delay="0">
+          <span class="timeline-dot"></span>
+          <div class="timeline-content">
+            <span class="timeline-period">2026</span>
+            <h3>[ROLL / PROJEKT]</h3>
+            <p>[Kort beskrivning av vad du gjorde och vad du åstadkom.]</p>
+          </div>
+        </li>
+        <li class="timeline-item reveal" data-reveal="slide-right" data-delay="140">
+          <span class="timeline-dot"></span>
+          <div class="timeline-content">
+            <span class="timeline-period">2025</span>
+            <h3>[ROLL / PROJEKT]</h3>
+            <p>[Kort beskrivning.]</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       KONTAKT
+       ========================================================= -->
+  <section id="contact" class="section section-alt">
+    <div class="wrap">
+      <p class="section-eyebrow reveal" data-reveal="fade">P — 06</p>
+      <h2 class="section-title reveal" data-reveal="slide-up">Kontakta mig</h2>
+      <p class="section-hint reveal" data-reveal="fade" data-delay="80">
+        Har du en fråga, en idé eller vill du komma i kontakt med mig? Skicka gärna ett meddelande.
+      </p>
+
+      <div class="contact-grid">
+
+        <ul class="contact-info reveal" data-reveal="slide-up" data-delay="120">
+          <li>
+            <span class="contact-label">E-post</span>
+            <a href="mailto:Masuud5@gmail.com">Masuud5@gmail.com</a>
+          </li>
+          <li>
+            <span class="contact-label">Telefon</span>
+            <span>[DITT TELEFONNUMMER]</span>
+          </li>
+          <li>
+            <span class="contact-label">Plats</span>
+            <span>Göteborg, Sverige</span>
+          </li>
+          <li>
+            <span class="contact-label">GitHub</span>
+            <a href="[DIN GITHUB]" target="_blank" rel="noopener">[DIN GITHUB]</a>
+          </li>
+          <li>
+            <span class="contact-label">LinkedIn</span>
+            <a href="[DIN LINKEDIN]" target="_blank" rel="noopener">[DIN LINKEDIN]</a>
+          </li>
+        </ul>
+
+        <!--
+        FORMULÄRET ANVÄNDER FORMSPREE.
+
+        Skapa ett formulär på https://formspree.io, koppla det till
+        Masuud5@gmail.com, och ersätt YOUR_FORM_ID nedan med ditt
+        riktiga Formspree Form ID. Se README.md för en fullständig guide.
+        -->
+        <form
+          id="contactForm"
+          class="contact-form reveal"
+          data-reveal="slide-up"
+          data-delay="200"
+          action="https://formspree.io/f/YOUR_FORM_ID"
+          method="POST"
+          novalidate>
+
+          <input type="hidden" name="_subject" value="Nytt meddelande från Masuud Ali - Portfolio">
+
+          <div class="form-field">
+            <label for="name">Namn</label>
+            <input type="text" id="name" name="name" autocomplete="name">
+            <span class="form-error" id="nameError"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="email">E-post</label>
+            <input type="email" id="email" name="email" autocomplete="email">
+            <span class="form-error" id="emailError"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="message">Meddelande</label>
+            <textarea id="message" name="message" rows="5"></textarea>
+            <span class="form-error" id="messageError"></span>
+          </div>
+
+          <button type="submit" class="btn btn-primary form-submit" id="formSubmitBtn">
+            Skicka meddelande
+          </button>
+
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>&copy; <span id="year"></span> Masuud Ali</p>
+
+    <div class="footer-links">
+      <a href="[DIN GITHUB]" target="_blank" rel="noopener">GitHub</a>
+      <a href="[DIN LINKEDIN]" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:Masuud5@gmail.com">E-post</a>
+    </div>
+
+    <button class="back-to-top" id="backToTop" type="button">Till toppen ↑</button>
+  </div>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
