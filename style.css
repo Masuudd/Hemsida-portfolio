@@ -4,12 +4,13 @@
    ========================================================= */
 :root {
   /* Färger */
-  --ink: #1B2340;          /* Mörk text / mörk bakgrund, med en aning blått */
-  --paper: #F7F9FC;        /* Ljus, kylig "pappers"-bakgrund */
-  --paper-soft: #EAF0FB;   /* Ljust blåtonad variant för omväxling */
-  --moss: #3D5AF1;         /* Huvudaccent: levande, proffsig blå */
-  --rust: #FF6B4A;         /* Liten accent: varm korall, "status/live"-känsla */
-  --line: rgba(27, 35, 64, 0.1);
+  --ink: #F1EEFF;          /* Ljus, nästan vit text (för mörk bakgrund) */
+  --paper: #0B0A1F;        /* Mörk "rymd"-bakgrund */
+  --paper-soft: rgba(255, 255, 255, 0.04); /* "Glas"-panel: nästan osynlig, syns mot mörkt */
+  --moss: #8B5CF6;         /* Neon-accent 1: lila */
+  --rust: #38BDF8;         /* Neon-accent 2: cyan */
+  --gradient: linear-gradient(135deg, var(--moss), var(--rust));
+  --line: rgba(241, 238, 255, 0.12);
 
   /* Typografi */
   --font-display: "Fraunces", serif;
@@ -54,8 +55,8 @@ a { color: inherit; text-decoration: none; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(244, 244, 239, 0.9);
-  backdrop-filter: blur(6px);
+  background: rgba(11, 10, 31, 0.75);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
 
@@ -111,8 +112,8 @@ a { color: inherit; text-decoration: none; }
   padding: 120px 0 100px;
   overflow: hidden;
   background:
-    radial-gradient(600px 400px at 85% -10%, rgba(61, 90, 241, 0.10), transparent),
-    radial-gradient(500px 350px at -10% 90%, rgba(255, 107, 74, 0.08), transparent);
+    radial-gradient(650px 500px at 88% -15%, rgba(139, 92, 246, 0.35), transparent),
+    radial-gradient(600px 450px at -10% 100%, rgba(56, 189, 248, 0.22), transparent);
 }
 
 .hero-inner { max-width: 640px; }
@@ -132,7 +133,13 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.08;
   margin-bottom: 24px;
 }
-.hero-title .accent { color: var(--moss); font-style: italic; text-shadow: 2px 2px 0 rgba(61, 90, 241, 0.15); }
+.hero-title .accent {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-style: italic;
+}
 
 .hero-sub {
   font-size: 1.05rem;
@@ -152,8 +159,10 @@ a { color: inherit; text-decoration: none; }
   display: none; /* visas via JS när sidan laddat, se script.js */
   align-items: center;
   gap: 10px;
-  background: var(--ink);
-  color: var(--paper);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  color: var(--ink);
   font-family: var(--font-mono);
   font-size: 0.78rem;
   padding: 10px 16px;
@@ -187,11 +196,15 @@ a { color: inherit; text-decoration: none; }
 }
 .btn:hover { transform: translateY(-2px); }
 
-.btn-primary { background: var(--ink); color: var(--paper); }
-.btn-primary:hover { background: var(--moss); }
+.btn-primary {
+  background: var(--gradient);
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(139, 92, 246, 0.35);
+}
+.btn-primary:hover { box-shadow: 0 6px 30px rgba(56, 189, 248, 0.45); }
 
-.btn-ghost { border-color: var(--line); background: transparent; }
-.btn-ghost:hover { border-color: var(--ink); }
+.btn-ghost { border-color: var(--line); background: rgba(255, 255, 255, 0.03); }
+.btn-ghost:hover { border-color: var(--rust); }
 
 .btn-small { font-size: 0.75rem; padding: 8px 14px; margin-top: 12px; }
 
@@ -253,7 +266,8 @@ a { color: inherit; text-decoration: none; }
   gap: 24px;
 }
 .skill-card {
-  background: var(--paper);
+  background: var(--paper-soft);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 20px;
@@ -318,7 +332,8 @@ a { color: inherit; text-decoration: none; }
 }
 
 .flip-front {
-  background: var(--paper);
+  background: var(--paper-soft);
+  backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -327,8 +342,9 @@ a { color: inherit; text-decoration: none; }
 .flip-hint { font-family: var(--font-mono); font-size: 0.75rem; opacity: 0.55; }
 
 .flip-back {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--gradient);
+  color: #fff;
+  border-color: transparent;
   transform: rotateY(180deg);
   display: flex;
   flex-direction: column;
