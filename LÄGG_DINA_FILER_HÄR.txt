@@ -1,4 +1,4 @@
-Lägg dina egna filer i den här mappen:
+Lägg dina egna filer i samma mapp som index.html:
 
 1. profile.jpg  — din profilbild
 2. music.mp3    — din 10-sekunders intro-musik

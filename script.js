@@ -81,6 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
     playIntroMusic();
   });
 
+  // Ett klick på laddningsskärmen räknas som användarinteraktion och kan låsa upp ljudet.
+  loadingScreen.addEventListener("click", playIntroMusic, { once: true });
+
   // Permanent ljudkontroll: klick startar/stoppar musiken manuellt
   soundToggleBtn.addEventListener("click", () => {
     if (introAudio.paused) {

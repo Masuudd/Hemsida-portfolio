@@ -9,24 +9,22 @@ En personlig portfolio-hemsida byggd med rent HTML, CSS och JavaScript
 portfolio/
 ├── index.html      Sidans struktur och innehåll
 ├── style.css        Allt utseende (färger, layout, animationer)
-├── script.js         All interaktivitet (meny, formulär, animationer, musik)
-├── README.md         Den här filen
-└── assets/
-    ├── profile.jpg   Din profilbild (du lägger till den själv)
-    └── music.mp3     Din 10-sekunders intro-musik (du lägger till den själv)
+├── script.js        All interaktivitet (meny, formulär, animationer, musik)
+├── profile.jpg      Din profilbild
+└── music.mp3        Din 10-sekunders intro-musik
 ```
 
 ## Hur jag lägger till min profilbild
 
 1. Döp din bildfil till exakt `profile.jpg` (skiftlägeskänsligt — inte `Profile.JPG`).
-2. Lägg filen i mappen `assets/`.
-3. Klart — `index.html` letar automatiskt efter `assets/profile.jpg`.
+2. Lägg filen i samma mapp som `index.html`.
+3. Klart — `index.html` letar automatiskt efter `profile.jpg`.
 4. Om filen saknas visas istället automatiskt dina initialer ("MA") i en cirkel, så sidan ser fortfarande bra ut.
 
 ## Hur jag lägger till min musik
 
 1. Döp din ljudfil till exakt `music.mp3`.
-2. Lägg den i `assets/`.
+2. Lägg den i samma mapp som `index.html`.
 3. Musiken försöker spelas automatiskt i 10 sekunder när sidan öppnas, och stoppas sedan av sig själv.
 4. Om webbläsaren blockerar automatisk uppspelning (vanligt i moderna webbläsare) visas en diskret knapp: "🔊 Aktivera ljud".
 5. Det finns även en permanent liten ljudknapp nere till höger för att starta/stoppa musiken manuellt när som helst.
