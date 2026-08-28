@@ -41,14 +41,8 @@
 <!-- Ljud för intro (10 sekunder). Se README för hur du lägger till filen. -->
 <audio id="introAudio" src="music.mp3" preload="auto" autoplay playsinline></audio>
 
-<!-- Diskret fallback-knapp om webbläsaren blockerar autoplay -->
-<button id="enableSoundBtn" class="sound-fallback-btn" type="button" hidden>
-  🔊 Aktivera ljud
-</button>
-
-<!-- Diskret permanent ljudkontroll -->
-<button id="soundToggleBtn" class="sound-toggle-btn" type="button" aria-label="Ljud av/på" title="Ljud av/på">
-  <span id="soundIcon">🔈</span>
+<button id="soundToggleBtn" class="sound-toggle-btn" type="button" aria-label="Stäng av ljud" title="Stäng av ljud">
+  <span id="soundIcon">🔊</span>
 </button>
 
 <!-- =========================================================
@@ -358,7 +352,7 @@
           </li>
           <li>
             <span class="contact-label">Telefon</span>
-            <span>[DITT TELEFONNUMMER]</span>
+            <a href="tel:+4672031989">+46 72 031 98 9</a>
           </li>
           <li>
             <span class="contact-label">Plats</span>
@@ -386,7 +380,7 @@
           class="contact-form reveal"
           data-reveal="slide-up"
           data-delay="200"
-          action="https://formspree.io/f/YOUR_FORM_ID"
+          action="mailto:Masuud5@gmail.com"
           method="POST"
           novalidate>
 

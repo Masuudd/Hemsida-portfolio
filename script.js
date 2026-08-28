@@ -22,11 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // 2. INTRO-MUSIK (10 sekunder, ingen loop)
   // =========================================================
   const introAudio = document.getElementById("introAudio");
-  const enableSoundBtn = document.getElementById("enableSoundBtn");
   const soundToggleBtn = document.getElementById("soundToggleBtn");
   const soundIcon = document.getElementById("soundIcon");
-
-  const MUSIC_DURATION_MS = 10000;
+  const MUSIC_DURATION_MS = 2400;
   let musicTimer = null;
 
   const loadingStartedAt = performance.now();
@@ -47,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
     introAudio.pause();
     introAudio.currentTime = 0;
     if (musicTimer) clearTimeout(musicTimer);
-    soundIcon.textContent = "🔈";
   }
 
   function playIntroMusic() {
@@ -56,14 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (playPromise !== undefined) {
       playPromise
         .then(() => {
-          soundIcon.textContent = "🔊";
-          enableSoundBtn.hidden = true;
           musicTimer = setTimeout(stopIntroMusic, MUSIC_DURATION_MS);
         })
         .catch(() => {
           // Webbläsaren blockerade autoplay — visa fallback-knappen.
           // Vi försöker INTE kringgå detta, det är webbläsarens säkerhetsregel.
-          enableSoundBtn.hidden = false;
         });
     }
   }
@@ -71,25 +65,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // Försök spela automatiskt när sidan är redo (bara om filen faktiskt finns)
   introAudio.addEventListener("error", () => {
     // Ingen musikfil hittades — det är okej, sidan fungerar ändå.
-    enableSoundBtn.hidden = true;
   });
   playIntroMusic();
-
-  enableSoundBtn.addEventListener("click", () => {
-    playIntroMusic();
-  });
 
   // Ett klick på laddningsskärmen räknas som användarinteraktion och kan låsa upp ljudet.
   loadingScreen.addEventListener("click", playIntroMusic);
 
-  // Permanent ljudkontroll: klick startar/stoppar musiken manuellt
   soundToggleBtn.addEventListener("click", () => {
-    if (introAudio.paused) {
-      playIntroMusic();
-    } else {
-      stopIntroMusic();
-    }
+    introAudio.muted = !introAudio.muted;
+    soundIcon.textContent = introAudio.muted ? "🔇" : "🔊";
+    soundToggleBtn.setAttribute("aria-label", introAudio.muted ? "Slå på ljud" : "Stäng av ljud");
+    soundToggleBtn.setAttribute("title", introAudio.muted ? "Slå på ljud" : "Stäng av ljud");
   });
+
 
   // =========================================================
   // 3. HEADER: byt stil vid scroll
@@ -230,28 +218,15 @@ document.addEventListener("DOMContentLoaded", () => {
     formStatus.textContent = "";
     formStatus.className = "form-status";
 
-    try {
-      const response = await fetch(contactForm.action, {
-        method: "POST",
-        body: new FormData(contactForm),
-        headers: { Accept: "application/json" },
-      });
-
-      if (response.ok) {
-        formStatus.textContent = "Tack! Ditt meddelande har skickats.";
-        formStatus.className = "form-status is-success";
-        contactForm.reset();
-      } else {
-        formStatus.textContent = "Det gick inte att skicka meddelandet. Försök igen.";
-        formStatus.className = "form-status is-error";
-      }
-    } catch (err) {
-      formStatus.textContent = "Det gick inte att skicka meddelandet. Försök igen.";
-      formStatus.className = "form-status is-error";
-    } finally {
-      formSubmitBtn.disabled = false;
-      formSubmitBtn.textContent = "Skicka meddelande";
-    }
+    const subject = encodeURIComponent("Meddelande från Masuud Ali - Portfolio");
+    const body = encodeURIComponent(
+      `Namn: ${fields.name.input.value.trim()}\nE-post: ${fields.email.input.value.trim()}\n\n${fields.message.input.value.trim()}`
+    );
+    window.location.href = `${contactForm.action}?subject=${subject}&body=${body}`;
+    formStatus.textContent = "Din e-postapp öppnas med meddelandet färdigt.";
+    formStatus.className = "form-status is-success";
+    formSubmitBtn.disabled = false;
+    formSubmitBtn.textContent = "Skicka meddelande";
   });
 
   // =========================================================

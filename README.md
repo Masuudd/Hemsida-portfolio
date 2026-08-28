@@ -26,8 +26,8 @@ portfolio/
 1. Döp din ljudfil till exakt `music.mp3`.
 2. Lägg den i samma mapp som `index.html`.
 3. Musiken försöker spelas automatiskt i 10 sekunder när sidan öppnas, och stoppas sedan av sig själv.
-4. Om webbläsaren blockerar automatisk uppspelning (vanligt i moderna webbläsare) visas en diskret knapp: "🔊 Aktivera ljud".
-5. Det finns även en permanent liten ljudknapp nere till höger för att starta/stoppa musiken manuellt när som helst.
+4. Musiken spelas automatiskt under introsekvensens 10 sekunder.
+5. Ljudet kan stängas av eller sättas på med mute-knappen nere till höger.
 6. Saknas filen helt fungerar sidan ändå precis som vanligt — inget går sönder.
 
 ## Hur jag ändrar mitt namn

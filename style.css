@@ -586,6 +586,8 @@ ul, ol { list-style: none; }
 }
 
 @media (max-width: 720px) {
+  .wrap { padding-left: 18px; padding-right: 18px; }
+  .header-inner { height: 64px; }
   .nav-toggle { display: flex; }
   .main-nav {
     position: fixed;
@@ -599,6 +601,18 @@ ul, ol { list-style: none; }
     gap: 20px;
   }
   .main-nav.is-open { display: flex; }
+  .hero { min-height: auto; padding: 104px 0 72px; }
+  .hero-title { font-size: clamp(2.5rem, 13vw, 4.2rem); overflow-wrap: anywhere; }
+  .hero-role { font-size: 0.85rem; }
+  .hero-desc { font-size: 0.95rem; }
+  .hero-actions .btn { width: 100%; justify-content: center; }
+  .profile-frame { width: min(260px, 72vw); }
+  .section { padding: 72px 0; }
+  .section-title { font-size: clamp(2rem, 10vw, 3rem); }
+  .contact-form { padding: 20px; }
+  .form-submit { width: 100%; justify-content: center; }
+  .footer-inner { align-items: flex-start; flex-direction: column; }
+  .footer-links { flex-wrap: wrap; }
   .fact-list li { flex-direction: column; gap: 2px; }
   .fact-list strong { text-align: left; }
 }
