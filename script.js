@@ -1,6 +1,29 @@
 // =========================================================
 // script.js — hela sidans logik, uppdelad i tydliga block.
 // Öppna webbläsarens konsol (F12 → Console) om något krånglar.
+//
+// INNEHÅLLSFÖRTECKNING — sök (Ctrl+F) på ett avsnittsnummer eller
+// namn nedan för att hoppa direkt dit i filen:
+//
+//   1.  LADDNINGSSKÄRM         → progressbar + döljer laddningsskärmen
+//   2.  KINETISK TYPOGRAFI     → delar upp "MASUUD ALI" i animerade bokstäver
+//   3.  HEADER (scroll-stil)   → byter header-bakgrund vid scroll
+//   4.  MOBILMENY              → öppnar/stänger hamburgarmenyn
+//   5.  AKTIV NAV-LÄNK         → markerar rätt menylänk vid scroll
+//   6.  SCROLL REVEAL          → fade/slide-in-animationer vid scroll
+//   7.  KONTAKTFORMULÄR        → validering + skickar meddelandet
+//   8.  TILL TOPPEN-KNAPP      → scrollar till toppen vid klick
+//   9.  ÅRTAL I FOOTERN        → skriver ut aktuellt år automatiskt
+//   10. CURSOR-GLOW            → ljuset som följer musen
+//   11. MAGNETISKA KNAPPAR     → knappar som "dras" mot muspekaren
+//   12. PROFILBILDENS ANIMATION → guppning + tilt + scroll-parallax
+//   13. VATTENBUBBLOR          → skapar bubblorna i bakgrunden
+//   14. RIPPLE-KLICK           → krusning vid varje klick
+//
+// Allt ligger inuti EN stor lyssnare (DOMContentLoaded, se nedan) —
+// det garanterar att koden bara körs efter att HELA sidan laddats
+// in, så att alla element (knappar, formulär osv.) faktiskt finns
+// när koden försöker hitta dem.
 // =========================================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -34,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 100);
 
   // =========================================================
-  // 1b. KINETISK TYPOGRAFI
+  // 2. KINETISK TYPOGRAFI
   // Delar upp hero-titelns text ("MASUUD ALI") i en <span> per
   // bokstav, så CSS (.kinetic-letter i style.css) kan animera in
   // varje bokstav för sig med en liten fördröjning mellan dem.
@@ -57,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================
-  // 2. HEADER: byt stil vid scroll
+  // 3. HEADER: byt stil vid scroll
   // =========================================================
   const siteHeader = document.getElementById("siteHeader");
   function updateHeaderStyle() {

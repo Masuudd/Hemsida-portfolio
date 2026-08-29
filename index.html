@@ -1,4 +1,36 @@
 <!DOCTYPE html>
+<!--
+  =========================================================
+  INDEX.HTML — så här hänger filerna ihop
+  =========================================================
+  Den här filen innehåller bara STRUKTUR och TEXT — vad som finns
+  på sidan och i vilken ordning. Den styr INTE hur något ser ut
+  eller rör sig:
+
+    - style.css  → allt utseende (färger, mått, animationers stil)
+    - script.js  → allt som händer (klick, scroll, formulär)
+
+  Filen är byggd sektion för sektion, i exakt samma ordning som en
+  besökare scrollar igenom sidan: Header → Hero → Om mig →
+  Kompetenser → Projekt → Utbildning → Erfarenhet → Kontakt → Footer.
+  Varje sektion har en egen kommentarruta (som denna) som talar om
+  var den börjar.
+
+  ÅTERKOMMANDE MÖNSTER ATT KÄNNA IGEN:
+    class="reveal" data-reveal="..." data-delay="..."
+      → Det här elementet är osynligt tills du scrollar till det,
+        då animerar script.js in det (se style.css, avsnitt
+        "SCROLL-REVEAL"). data-reveal styr VILKEN rörelse (fade,
+        slide-up, slide-right, scale) och data-delay hur många
+        millisekunder den väntar innan den startar — högre tal på
+        element som ska dyka upp lite EFTER de andra.
+
+    aria-hidden="true"
+      → Talar om för skärmläsare att strunta i elementet — det
+        används på rent dekorativa saker (bakgrundseffekter, ikoner)
+        som inte tillför någon information i sig.
+  =========================================================
+-->
 <html lang="sv">
 <head>
 <meta charset="UTF-8">

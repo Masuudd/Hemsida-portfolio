@@ -1,32 +1,43 @@
 /* =========================================================
-   INNEHÅLLSFÖRTECKNING — sök (Ctrl+F) på rubriken i VS Code
-   för att hoppa direkt dit:
+   INNEHÅLLSFÖRTECKNING
+   Sök (Ctrl+F) på en rubrik nedan för att hoppa direkt dit i
+   filen. Filen är ordnad i samma ordning som sidan läses,
+   uppifrån och ned:
 
-   "DESIGNSYSTEM"     → färger, typsnitt (ändra här för att byta hela paletten)
-   "CURSOR-GLOW"      → det teal-färgade ljuset som följer musen
-   "RIPPLE-KLICK"     → krusningen som uppstår vid varje klick
-   "VATTEN-BAKGRUND"  → caustics (drivande ljus) + bubblor bakom hela sidan
-   "VÅGDELARE"        → de vågformade kanterna mellan sektioner
-   "GRAIN-OVERLAY"    → det subtila "filmkorn"-lagret över hela sidan
-   "KINETISK TYPOGRAFI" → bokstav-för-bokstav-animationen på hero-titeln
-   "LADDNINGSSKÄRM"   → skärmen som visas när sidan öppnas
-   "HEADER / NAV"     → menyn högst upp
-   "BUTTONS"          → alla knappars utseende
-   "HERO"             → första sektionen med namn + profilbild
-   "SECTIONS"         → generella regler alla sektioner delar
-   "OM MIG"           → "Om mig"-sektionen
-   "KOMPETENSER"      → kunskaps-taggarna
-   "PROJEKT"          → projektkorten
-   "TIDSLINJE"        → Utbildning & Erfarenhet
-   "KONTAKT"          → kontaktformuläret
-   "FOOTER"           → sidfoten
-   "SCROLL-REVEAL"    → animationerna som spelas upp vid scroll
-   "RESPONSIVITET"    → allt som ändras på mindre skärmar (mobil)
+   1. DESIGNSYSTEM        → färger, typsnitt, mått (ändra HÄR för att byta hela paletten)
+   2. GRUNDLÄGGANDE STILAR → nollställningar + bas-stilar som gäller HELA sidan
+   3. VATTENTEMATS EFFEKTER → alla dekorativa "vatten"-effekter, samlade på ett ställe:
+        3.1 Cursor-glow    → ljuset som följer musen
+        3.2 Ripple-klick   → krusningen vid varje klick
+        3.3 Vatten-bakgrund → caustics (drivande ljus) + bubblor
+        3.4 Vågdelare      → vågformade kanter mellan sektioner
+        3.5 Grain-overlay  → subtilt "filmkorn" ovanpå allt
+        3.6 Kinetisk typografi → bokstav-för-bokstav-animation på hero-titeln
+   4. LADDNINGSSKÄRM       → skärmen som visas när sidan öppnas
+   5. HEADER / NAV         → menyn högst upp
+   6. BUTTONS              → alla knappars utseende
+   7. HERO                 → första sektionen: namn + profilbild
+   8. SECTIONS (generella) → regler alla sektioner delar
+   9. OM MIG               → "Om mig"-sektionen
+   10. KOMPETENSER         → kunskaps-taggarna
+   11. PROJEKT             → projektkorten
+   12. TIDSLINJE           → Utbildning & Erfarenhet
+   13. KONTAKT             → kontaktformuläret
+   14. FOOTER              → sidfoten
+   15. SCROLL-REVEAL       → animationerna som spelas upp vid scroll
+   16. RESPONSIVITET       → allt som ändras på mindre skärmar (mobil)
+   17. REDUCED-MOTION      → stänger av rörelse om användaren bett om det
+
+   TIPS: Varje avsnitt nedan inleds med en likadan streckad ruta
+   som den du läser just nu — det är bara en kommentar, webbläsaren
+   struntar helt i den. Den finns enbart så att du (eller jag,
+   nästa gång) snabbt ska hitta rätt ställe i filen.
    ========================================================= */
 
 /* =========================================================
-   DESIGNSYSTEM
-   Ändra en variabel här, och hela sidan uppdateras.
+   1. DESIGNSYSTEM
+   Ändra en variabel här, och hela sidan uppdateras — t.ex. byt
+   --accent för att ge hela sajten en annan huvudfärg.
    ========================================================= */
 :root {
   /* Palett hämtad från din profilbild: nästan svart, dovt teal-ljus
@@ -51,15 +62,52 @@
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* =========================================================
+   2. GRUNDLÄGGANDE STILAR (RESET)
+   Nollställningar och bas-stilar som gäller HELA sidan — allt
+   annat i filen bygger vidare på det som står här. Det här
+   blocket låg tidigare uppdelat på två ställen i filen; nu är
+   allt bas-relaterat samlat på ett ställe.
+   ========================================================= */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+/* .caustics och #bubbles ligger på z-index 0–1 (fast bakgrund).
+   Allt riktigt innehåll måste ligga ovanpå det, annars döljs det. */
+header, main, footer { position: relative; z-index: 2; }
 
 /* =========================================================
-   CURSOR-GLOW
+   3. VATTENTEMATS EFFEKTER
+   Alla dekorativa "vatten"-effekter är samlade i det här
+   avsnittet, i sex under-delar (3.1–3.6). De är helt fristående
+   från layouten ovan — tar du bort hela det här avsnittet
+   fungerar sidan fortfarande, bara utan de extra effekterna.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   3.1 CURSOR-GLOW
    Ett mjukt, runt teal-ljussken som följer musen. Styrs av
    script.js (avsnitt "CURSOR-GLOW"), som uppdaterar left/top vid
    mousemove. Rör absolut ingenting i sig själv — bara en cirkel.
-   ========================================================= */
+   --------------------------------------------------------- */
 .cursor-glow {
   position: fixed;
   top: 0;
@@ -78,13 +126,13 @@ html { scroll-behavior: smooth; }
 }
 .cursor-glow.is-active { opacity: 1; }
 
-/* =========================================================
-   RIPPLE-KLICK
+/* ---------------------------------------------------------
+   3.2 RIPPLE-KLICK
    Varje klick skapar en expanderande ring — som att röra vid en
    vattenyta. script.js (avsnitt "RIPPLE-KLICK") skapar en ny
    .ripple-ring vid klickpunkten och tar bort den när animationen
    är klar.
-   ========================================================= */
+   --------------------------------------------------------- */
 .ripple-ring {
   position: fixed;
   width: 12px;
@@ -101,15 +149,15 @@ html { scroll-behavior: smooth; }
   to   { width: 220px; height: 220px; opacity: 0; }
 }
 
-/* =========================================================
-   VATTEN-BAKGRUND (caustics + bubblor)
+/* ---------------------------------------------------------
+   3.3 VATTEN-BAKGRUND (caustics + bubblor)
    Ett fast lager bakom allt innehåll som ger hela sidan en känsla
    av att befinna sig under vattenytan. Två delar:
    1) .caustics — långsamt drivande ljusfläckar (som solljus genom
       vatten), ren CSS, ingen JavaScript behövs.
    2) #bubbles — en tom behållare som script.js (avsnitt
       "VATTENBUBBLOR") fyller med små bubblor som stiger uppåt.
-   ========================================================= */
+   --------------------------------------------------------- */
 .caustics {
   position: fixed;
   inset: 0;
@@ -150,11 +198,11 @@ html { scroll-behavior: smooth; }
   100% { transform: translate(var(--drift, 20px), -115vh); opacity: 0; }
 }
 
-/* =========================================================
-   VÅGDELARE
+/* ---------------------------------------------------------
+   3.4 VÅGDELARE
    En vågformad SVG-kant mellan utvalda sektioner — som en
    vattenyta — istället för en rak linje.
-   ========================================================= */
+   --------------------------------------------------------- */
 .wave-divider {
   display: block;
   width: 100%;
@@ -176,13 +224,13 @@ html { scroll-behavior: smooth; }
   to   { transform: translateX(-50%); }
 }
 
-/* =========================================================
-   GRAIN-OVERLAY
+/* ---------------------------------------------------------
+   3.5 GRAIN-OVERLAY
    Ett extremt subtilt brus-lager (som filmkorn) ovanpå hela sidan.
    Det här är detaljen som får en platt design att kännas dyr och
    analog istället för digital och steril. Byggd med en liten
    inbäddad SVG (feTurbulence) — ingen bildfil behövs.
-   ========================================================= */
+   --------------------------------------------------------- */
 .grain-overlay {
   position: fixed;
   inset: 0;
@@ -192,13 +240,13 @@ html { scroll-behavior: smooth; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* =========================================================
-   KINETISK TYPOGRAFI
+/* ---------------------------------------------------------
+   3.6 KINETISK TYPOGRAFI
    script.js delar upp hero-titelns text i en <span> per bokstav
    (klass .kinetic-letter) och låter varje bokstav animeras in
    var för sig, med en liten fördröjning mellan varje — det ger
    en mycket mer "levande" känsla än att hela raden bara dyker upp.
-   ========================================================= */
+   --------------------------------------------------------- */
 .kinetic-letter {
   display: inline-block;
   opacity: 0;
@@ -214,35 +262,8 @@ html { scroll-behavior: smooth; }
   to { opacity: 1; transform: translateY(0) rotate(0deg); }
 }
 
-button {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-body {
-  font-family: var(--font-body);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-img { max-width: 100%; display: block; }
-a { color: inherit; text-decoration: none; }
-ul, ol { list-style: none; }
-
-.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
-
-/* .caustics och #bubbles ligger på z-index 0–1 (fast bakgrund).
-   Allt riktigt innehåll måste ligga ovanpå det, annars döljs det. */
-header, main, footer { position: relative; z-index: 2; }
-
 /* =========================================================
-   LADDNINGSSKÄRM
+   4. LADDNINGSSKÄRM
    ========================================================= */
 .loading-screen {
   position: fixed;
@@ -326,7 +347,7 @@ header, main, footer { position: relative; z-index: 2; }
 }
 
 /* =========================================================
-   HEADER / NAV
+   5. HEADER / NAV
    ========================================================= */
 .site-header {
   position: fixed;
@@ -390,7 +411,7 @@ header, main, footer { position: relative; z-index: 2; }
 .nav-toggle.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* =========================================================
-   BUTTONS
+   6. BUTTONS
    ========================================================= */
 .btn {
   display: inline-flex;
@@ -417,7 +438,9 @@ header, main, footer { position: relative; z-index: 2; }
 .btn-small { font-size: 0.72rem; padding: 9px 16px; }
 
 /* =========================================================
-   HERO
+   7. HERO
+   Allt som hör till första sektionen: bakgrundsglöd, rubrik,
+   knappar och hela profilbilden (ram, våglinje, droppar).
    ========================================================= */
 .hero {
   position: relative;
@@ -612,7 +635,10 @@ header, main, footer { position: relative; z-index: 2; }
 }
 
 /* =========================================================
-   SECTIONS (generella)
+   8. SECTIONS (generella)
+   Regler som ALLA sektioner nedanför hero delar — padding,
+   rubrikstil osv. De enskilda sektionerna (Om mig, Kompetenser...)
+   lägger bara till det som är unikt för just dem.
    ========================================================= */
 .section { padding: 110px 0; position: relative; }
 .section-alt { background: rgba(7, 12, 16, 0.55); backdrop-filter: blur(2px); }
@@ -622,7 +648,7 @@ header, main, footer { position: relative; z-index: 2; }
 .section-hint { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 40px; max-width: 60ch; }
 
 /* =========================================================
-   OM MIG
+   9. OM MIG
    ========================================================= */
 .about-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 56px; align-items: start; }
 .about-text p { color: var(--text-secondary); font-size: 1.05rem; max-width: 56ch; margin-bottom: 16px; }
@@ -642,7 +668,7 @@ header, main, footer { position: relative; z-index: 2; }
 .fact-list strong { font-weight: 600; text-align: right; }
 
 /* =========================================================
-   KOMPETENSER
+   10. KOMPETENSER
    ========================================================= */
 .skills-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
 .skills-category-title { font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-secondary); margin-bottom: 16px; }
@@ -664,7 +690,7 @@ header, main, footer { position: relative; z-index: 2; }
 }
 
 /* =========================================================
-   PROJEKT
+   11. PROJEKT
    ========================================================= */
 .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
 
@@ -710,7 +736,9 @@ header, main, footer { position: relative; z-index: 2; }
 .project-links { display: flex; gap: 10px; flex-wrap: wrap; }
 
 /* =========================================================
-   TIDSLINJE (Utbildning & Erfarenhet)
+   12. TIDSLINJE (Utbildning & Erfarenhet)
+   Delas av båda sektionerna — samma .timeline-klasser används
+   på båda ställena i index.html.
    ========================================================= */
 .timeline { position: relative; max-width: 720px; }
 .timeline::before {
@@ -738,7 +766,7 @@ header, main, footer { position: relative; z-index: 2; }
 .timeline-content p:not(.timeline-role) { color: var(--text-secondary); font-size: 0.92rem; }
 
 /* =========================================================
-   KONTAKT
+   13. KONTAKT
    ========================================================= */
 .contact-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 48px; }
 
@@ -785,7 +813,7 @@ header, main, footer { position: relative; z-index: 2; }
 .form-status.is-error { color: #F87171; }
 
 /* =========================================================
-   FOOTER
+   14. FOOTER
    ========================================================= */
 .site-footer { padding: 40px 0; border-top: 1px solid var(--border); }
 .footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); }
@@ -795,7 +823,7 @@ header, main, footer { position: relative; z-index: 2; }
 .back-to-top:hover { color: var(--accent); }
 
 /* =========================================================
-   SCROLL-REVEAL ANIMATIONER
+   15. SCROLL-REVEAL ANIMATIONER
    Elementen börjar osynliga/förskjutna; script.js lägger till
    klassen .is-visible när de scrollas in i vy (IntersectionObserver).
    ========================================================= */
@@ -807,7 +835,7 @@ header, main, footer { position: relative; z-index: 2; }
 .reveal.is-visible { opacity: 1; transform: none; }
 
 /* =========================================================
-   RESPONSIVITET
+   16. RESPONSIVITET
    ========================================================= */
 @media (max-width: 900px) {
   .hero-inner { grid-template-columns: 1fr; text-align: center; }
@@ -850,7 +878,7 @@ header, main, footer { position: relative; z-index: 2; }
   .fact-list strong { text-align: left; }
 }
 
-/* Respektera "minska rörelse"-inställningen */
+/* Respektera "minska rörelse"-inställningen (avsnitt 17) */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { transition: opacity 0.4s ease; transform: none !important; }
